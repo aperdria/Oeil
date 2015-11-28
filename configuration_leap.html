@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+	    <!--<link rel="icon" href="./favicon.ico">-->
+
+	    <title>Thales PR</title>
+
+	    <!-- Bootstrap core CSS -->
+	 	<link href="./bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+
+	    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	    <link href="./bootstrap-3.3.6-dist/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+	    <!-- Custom styles for this template -->
+	    <link href="./style.css" rel="stylesheet">
+
+	    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	    <!--[if lt IE 9]>
+	      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+  	</head>
+
+  	<body>
+
+  		<!--Inclusion pour le Leap Motion-->
+  		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+		<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.1.0.min.js"?></script>
+		<script type="text/javascript" src="./scripts/donnees_leap.js"></script>
+
+		<script>
+
+			//Gère les initialisations des boutons, des éléments du canvas à l'ouverture de la page
+		    $(document).ready(function()
+		    {
+		    	displayData = true;
+		        assignButtons();
+		        circle1 = $("#circle1");
+		        circle2 = $("#circle2");
+		        rect1 = $("#rect1");
+		        rect2 = $("#rect2");
+		    });
+
+			//localStorage.clear()   //A décommenter pour clear le localStorage
+			
+			//Chargement des positions des postits à partir du localStorage
+			var monobjet_json = localStorage.getItem("positions1");
+			if(monobjet_json != null)
+			{
+				positions1 = JSON.parse(monobjet_json);
+				plane1 = createPlane(plane1,positions1);
+			}
+			monobjet_json = localStorage.getItem("positions2");
+			if(monobjet_json != null)
+			{
+				positions2 = JSON.parse(monobjet_json);
+				plane2 = createPlane(plane2,positions2);
+			}
+
+		    //enregistre les positions selon l'appui sur le bouton
+		    function assignButtons()
+		    {
+		        $("#touch-top-left").click(function(){
+		            positions.topLeft = {
+		                x : globalFrame.pointables[0].stabilizedTipPosition[0],    //Position au bout du premier doigt sur l'axe x
+		                y : globalFrame.pointables[0].stabilizedTipPosition[1],
+		                z : globalFrame.pointables[0].stabilizedTipPosition[2]
+		            }
+		            console.log("positions.topLeft: "+positions.topLeft);
+		        });
+
+
+		        $("#touch-top-right").click(function(){
+		            positions.topRight = {
+		                x : globalFrame.pointables[0].stabilizedTipPosition[0],
+		                y : globalFrame.pointables[0].stabilizedTipPosition[1],
+		                z : globalFrame.pointables[0].stabilizedTipPosition[2]
+		            }
+		            console.log("positions.topRight: "+positions.topRight);
+		        });
+
+		        $("#touch-bottom-left").click(function(){
+			        positions.bottomLeft = {
+		                x : globalFrame.pointables[0].stabilizedTipPosition[0],
+		                y : globalFrame.pointables[0].stabilizedTipPosition[1],
+		                z : globalFrame.pointables[0].stabilizedTipPosition[2]
+		            }
+		            console.log("positions.bottomLeft: "+positions.bottomLeft);
+		        });
+
+
+		        $("#touch-bottom-right").click(function(){
+		            positions.bottomRight = {
+		                x : globalFrame.pointables[0].stabilizedTipPosition[0],
+		                y : globalFrame.pointables[0].stabilizedTipPosition[1],
+		                z : globalFrame.pointables[0].stabilizedTipPosition[2]
+		            }
+		            console.log("positions.bottomRight: "+positions.bottomRight);
+		        });
+
+		        $("#create-plane1").click(function(){
+		        	//Sauvegarde des positions dans positions1
+		            positions1.topLeft = positions.topLeft;
+		            positions1.topRight = positions.topRight;
+		            positions1.bottomLeft = positions.bottomLeft;
+		            positions1.bottomRight = positions.bottomRight;
+
+		            //Création du plan 1
+		            plane1 = createPlane(plane1,positions1);
+
+		           	//sauvegarde de positions1
+		            monobjet_json = JSON.stringify(positions1);
+					localStorage.setItem("positions1",monobjet_json);
+
+		            console.log("plane1: " + plane1);
+		        });
+
+		        $("#create-plane2").click(function(){
+		            positions2.topLeft = positions.topLeft;
+		            positions2.topRight = positions.topRight;
+		            positions2.bottomLeft = positions.bottomLeft;
+		            positions2  .bottomRight = positions.bottomRight;
+
+		          	plane2 = createPlane(plane2,positions2);
+
+		            //sauvegarde de positions2
+		            monobjet_json = JSON.stringify(positions2);
+					localStorage.setItem("positions2",monobjet_json);
+					
+		            console.log("plane2: " + plane2);
+		        });
+
+		    }
+		</script>
+
+  		<div class="site-wrapper">
+      		<div class="site-wrapper-inner">
+        		<div class="cover-container">
+          			<div class="masthead clearfix">
+            			<div class="inner">
+              				<h1 class="masthead-brand">Configuration du Leap Motion</h1>
+              				<nav>
+				                <ul class="nav masthead-nav">
+				                	<li class="active"><a href="etape1.html">Accueil</a></li>
+				                	<li><a href="configuration_leap.html">Configuration du Leap Motion</a></li>
+				                </ul>
+			              </nav>
+            			</div>
+          			</div>
+
+          			<div class="col-md-12">
+            				<p class="lead">Pour chaque angle de la future interface, positionner votre index puis cliquer sur le bouton correspondant. Une fois les quatre angles créés appuyer sur le bouton "Créer l'interface tactile". A refaire pour les deux interfaces que l'on souhaite créer.</p>
+            		</div>
+            		
+            		<div class="col-md-12 nopadding">
+            			<div class="col-md-6 nopadding">
+	          				<a href="#" class="btn btn-lg btn-default" id="touch-top-left">Top Left</a>
+	          				<a href="#" class="btn btn-lg btn-default" id="touch-top-right">Top Right</a>
+	          				<br>
+	          				<a href="#" class="btn btn-lg btn-default" id="touch-bottom-left">Bottom Left</a>
+	          				<a href="#" class="btn btn-lg btn-default" id="touch-bottom-right">Bottom Right</a>
+	          				<br><br>
+	          				<a href="#" class="btn btn-lg btn-default" id="create-plane1">Interface 1</a>
+	          				<a href="#" class="btn btn-lg btn-default" id="create-plane2">Interface 2</a>
+	          				</br></br>
+	          				<svg id="myCanvas" width="200" height="200" background="green">
+							    <rect id ="rect1" width="200" height="200" fill="#F7230C" opacity="0.9"/>
+								<circle id="circle1" cx="100" cy="100" r="8" stroke="black" stroke-width="3" fill="black" opacity="0.8"/>
+								<text x="62" y="20" fill="black">Interface 1</text>
+							</svg>
+			  	
+		  					<svg id="myCanvas2" width="200" height="200" background="green">
+							    <rect id ="rect2" width="200" height="200" fill="#F7230C" opacity="0.9"/>
+							    <circle id="circle2" cx="100" cy="100" r="8" stroke="black" stroke-width="3" fill="black" opacity="0.8"/>
+							    <text x="62" y="20" fill="black">Interface 2</text>
+							</svg>
+	          			</div>
+
+	          			<div class="col-md-6 nopadding">
+	          				<div class="col-md-12">
+	          					<div class="col-md-4 nopadding">
+		          					<h4><b>Frame data</b></h4>
+								    <div id="frameData"></div>
+								    <div style="clear:both;"></div>
+								</div>
+								<div class="col-md-8 nopadding">
+								    <h4><b>Hand data:</b></h4>
+								    <div id="handData"></div>
+								    <div style="clear:both;"></div>
+		          				</div>
+	          				</div>
+	          				
+	          				<br>
+	          				<div class="col-md-12 nopadding">
+	          					<h4><b>Finger data:</b></h4>
+						    	<div id="pointableData"></div>
+						    	<div style="clear:both;"></div>
+						    </div>
+	          				
+          				</div>
+          			</div>
+
+        		</div>
+      		</div>
+    	</div>
+	</body>
+
+</html>
