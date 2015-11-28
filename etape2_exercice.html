@@ -67,14 +67,13 @@
         <div class="container">
             <div class="row">
 				<div class="col-md-12">
-					<h2 class="cover-heading">Etape 1</h2>
-					<p class="lead">Bienvenue sur l'outil de test du projet Interaction.</br>Vous aurez dix secondes pour répondre aux questions qui vont vous être posées.</br>Entrez votre pseudo et appuyez sur commencer.</p>
-					<form action="etape1_exercice.html" method="GET">
-					<input type="text" placeholder="Votre pseudo" name="pseudo">
-					<span class="help-block"></span>
-					<button type="submit" class="btn btn-default">Commencer</button>
-					</form>
-
+					<div id="pourcentage"></div>
+					<div class="flip-clock-wrapper clock"></div>
+					<div id="exercice"></div>
+					<div id="buttons">
+						<a href="#" onclick="next_yes()" class="btn btn-lg btn-default">Oui</a>
+						<a href="#" onclick="next_no()" class="btn btn-lg btn-default">Non</a>
+					</div>
 				 </div>
             </div>
         </div>
@@ -155,7 +154,7 @@
 	        callbacks: {
 	        	stop: function() {
 	        		pourcentage_reussite_gestuel=Math.round((score*100)/compteur);
-			    	document.location.href = 'index.html?pseudo='+pseudo+'&pourcentage_reussite_tactile='+pourcentage_reussite_tactile+'&pourcentage_reussite_gestuel='+pourcentage_reussite_gestuel;
+			    	document.location.href = 'index.html?pseudo='+pseudo+'&pourcentage_reussite_tactile='+pourcentage_reussite_tactile+'&pourcentage_reussite_gestuel='+pourcentage_reussite_gestuel+"#scores";
 	        	}
 	        }
 	    });

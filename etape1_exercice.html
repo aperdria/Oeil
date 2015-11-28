@@ -67,14 +67,13 @@
         <div class="container">
             <div class="row">
 				<div class="col-md-12">
-					<h2 class="cover-heading">Etape 1</h2>
-					<p class="lead">Bienvenue sur l'outil de test du projet Interaction.</br>Vous aurez dix secondes pour répondre aux questions qui vont vous être posées.</br>Entrez votre pseudo et appuyez sur commencer.</p>
-					<form action="etape1_exercice.html" method="GET">
-					<input type="text" placeholder="Votre pseudo" name="pseudo">
-					<span class="help-block"></span>
-					<button type="submit" class="btn btn-default">Commencer</button>
-					</form>
-
+					<div id="pourcentage"></div>
+					<div class="flip-clock-wrapper clock"></div>
+					<div id="exercice"></div>
+					<div id="buttons">
+						<a href="#" onclick="next_yes()" class="btn btn-lg btn-default">Oui</a>
+						<a href="#" onclick="next_no()" class="btn btn-lg btn-default">Non</a>
+					</div>
 				 </div>
             </div>
         </div>
@@ -111,13 +110,11 @@
     var parameters = location.search.substring(1).split("&");
     var temp = parameters[0].split("=");
     var pseudo = unescape(temp[1]);
-    temp = parameters[1].split("=");
-    var pourcentage_reussite_tactile = unescape(temp[1]);
 		  
     var score=0;  
     var compteur = 0;
     var i=0;
-    var pourcentage_reussite_gestuel=0;
+    var pourcentage_reussite_tactile=0;
 	var clock;
     
     i = Math.floor(Math.random()*table.length);
@@ -133,8 +130,8 @@
     		score++;
     	i = Math.floor(Math.random()*table.length);
 	    document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
-		pourcentage_reussite_gestuel=Math.round((score*100)/compteur);
-		document.getElementById("pourcentage").innerHTML = pourcentage_reussite_gestuel+'% de réussite';
+		pourcentage_reussite_tactile=Math.round((score*100)/compteur);
+		document.getElementById("pourcentage").innerHTML = pourcentage_reussite_tactile+'% de réussite';
 
     }
     
@@ -144,8 +141,8 @@
 			score++;
     	i = Math.floor(Math.random()*table.length);
 	    document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
-	    pourcentage_reussite_gestuel=Math.round((score*100)/compteur);
-	    document.getElementById("pourcentage").innerHTML = pourcentage_reussite_gestuel+'% de réussite';
+	    pourcentage_reussite_tactile=Math.round((score*100)/compteur);
+	    document.getElementById("pourcentage").innerHTML = pourcentage_reussite_tactile+'% de réussite';
     }
 		
 	function clock() {
@@ -154,8 +151,8 @@
 	        countdown: true,
 	        callbacks: {
 	        	stop: function() {
-	        		pourcentage_reussite_gestuel=Math.round((score*100)/compteur);
-			    	document.location.href = 'index.html?pseudo='+pseudo+'&pourcentage_reussite_tactile='+pourcentage_reussite_tactile+'&pourcentage_reussite_gestuel='+pourcentage_reussite_gestuel;
+	        		pourcentage_reussite_tactile=Math.round((score*100)/compteur);
+			    	document.location.href = 'etape2.html?pseudo='+pseudo+'&pourcentage_reussite_tactile='+pourcentage_reussite_tactile;
 	        	}
 	        }
 	    });

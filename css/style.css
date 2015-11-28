@@ -11,7 +11,6 @@ body {
 .inner {
   padding: 30px;
 }
-
 #rectangle-blue {
 width: 200px;
 height: 100px;
@@ -103,4 +102,29 @@ margin:0 auto;
 margin-top: 20px;
 margin-bottom: 20px;
 background: red;
+}
+<<<<<<< HEAD:css/style.css
+
+=======
+>>>>>>> origin/master:style.css
+#myCanvas{
+    border: 2px;
+    border-color: black;
+    border-style: solid;
+    position: relative;
+    right:0;
+    margin-right: 20px;
+}
+#myCanvas2{
+    border: 2px;
+    border-color: black;
+    border-style: solid;
+    position: relative;
+    right:0;
+    margin-right: 20px;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
 }
