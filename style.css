@@ -104,3 +104,24 @@ margin-top: 20px;
 margin-bottom: 20px;
 background: red;
 }
+#myCanvas{
+    border: 2px;
+    border-color: black;
+    border-style: solid;
+    position: relative;
+    right:0;
+    margin-right: 20px;
+}
+#myCanvas2{
+    border: 2px;
+    border-color: black;
+    border-style: solid;
+    position: relative;
+    right:0;
+    margin-right: 20px;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
