@@ -360,7 +360,7 @@ Leap.loop(controllerOptions, function(frame)
             pointableString += "<p>";
 
             pointableString += "Pointable ID: " + pointable.id + "<br />";
-            pointableString += "Belongs to hand with ID: " + pointable.handId + "<br />";
+            pointableString += "Belongs to hand : " + pointable.handId + "<br />";
             pointableString += "Direction: " + vectorToString(pointable.direction, 2) + "<br />";
             pointableString += "</p>";
             if((i+1) != frame.pointables.length)
