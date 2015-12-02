@@ -11,6 +11,22 @@ body {
 .inner {
   padding: 30px;
 }
+.btn-begin {
+	background-color: #87ba76;
+	border-color: #87ba76;
+}
+.btn-begin:hover {
+	background-color: #5c8050;
+	border-color: #5c8050;
+}
+#main-title {
+	font-family: 'Black Ops', 'sans serif';
+	font-size: 48px;
+}
+@font-face {
+  font-family: 'Black Ops';
+  src: url('../fonts/BlackOpsOne-Regular.ttf');
+}
 #rectangle-blue {
 width: 200px;
 height: 100px;
@@ -75,7 +91,7 @@ width: 0;
 height: 0;
 border-left: 50px solid transparent;
 border-right: 50px solid transparent;
-border-bottom: 100px solid red;
+border-bottom: 100px solid blue;
 margin:0 auto;
 margin-top: 20px;
 margin-bottom: 20px;
@@ -86,7 +102,7 @@ width: 0;
 height: 0;
 border-left: 50px solid transparent;
 border-right: 50px solid transparent;
-border-bottom: 100px solid red;
+border-bottom: 100px solid green;
 margin:0 auto;
 margin-top: 20px;
 margin-bottom: 20px;
@@ -103,10 +119,6 @@ margin-top: 20px;
 margin-bottom: 20px;
 background: red;
 }
-<<<<<<< HEAD:css/style.css
-
-=======
->>>>>>> origin/master:style.css
 #myCanvas{
     border: 2px;
     border-color: black;
@@ -128,3 +140,4 @@ background: red;
    padding: 0 !important;
    margin: 0 !important;
 }
+
