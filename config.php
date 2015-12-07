@@ -34,7 +34,7 @@
     <?php include_once "menu_min.php" ?>
 
     <!-- Intro Section -->
-    <section id="about" class="about-section">
+    <section id="about" class="page-section">
         <div class="container">
             <div class="row">
 				<div class="col-md-12">

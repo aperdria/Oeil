@@ -19,6 +19,11 @@ body {
 	background-color: #5c8050;
 	border-color: #5c8050;
 }
+#card {
+	background-color: #fff;
+	padding-bottom: 100px;
+	padding-top: 100px;
+}
 #main-title {
 	font-family: 'Black Ops', 'sans serif';
 	font-size: 48px;

@@ -38,20 +38,31 @@
     <!-- Intro Section -->
     <section id="about" class="about-section">
         <div class="container">
-            <div class="row">
+            <div class="row" id="card">
 				<div class="col-md-12">
-					<div id="score"></div>
-					<div class="flip-clock-wrapper clock"></div>
-					<div id="exercice"></div>
+					<div id="score"></div></br></br>
+					<div class="col-md-12">
+						<div class="col-md-4"></div>
+						<div class="col-md-4"><div class="flip-clock-wrapper clock"></div></div>
+						<div class="col-md-4"></div>
+					</div>
 					<div id="buttons">
 						<a href="#" onclick="next_yes()" class="btn btn-lg btn-default">Oui</a>
 						<a href="#" onclick="next_no()" class="btn btn-lg btn-default">Non</a>
 					</div>
+					<div class="col-md-12" style="padding:20px; min-height:100px;"><div id="exercice"></div></div>
 				 </div>
+            </div>
             </div>
         </div>
     </section>
 
+   <form action="index.php#scores" method="post">
+		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
+		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
+		<input type="hidden" name="score_tactile" id="score_tactile" value="<?php echo $_POST['score_tactile'] ?>">
+		<input type="hidden" name="score_gestuel" id="score_gestuel">
+	</form>
    
     <!-- jQuery -->
     <script src="./js/jquery.js"></script>
@@ -101,20 +112,15 @@
     	new Array("Le rond est rouge ?","circle-blue","false"),
     	new Array("Le triangle est vert ?","triangle-up-red","false"),
     	new Array("Le triangle est bleu ?","triangle-up-blue","true"),
-    	new Array("4*6=21 ?","","false"),
-    	new Array("3*9=28 ?","","false"),
+    	new Array("4x6=21 ?","","false"),
+    	new Array("3x9=28 ?","","false"),
+    	new Array("4x7=28 ?","","true"),
     	new Array("256/2=123 ?","","false"),
-    	new Array("7*8=49 ?","","false"),
-    	new Array("4*8=32 ?","","true"),
-    	new Array("12*3=26 ?","","true"),
+    	new Array("7x8=49 ?","","false"),
+    	new Array("4x8=32 ?","","true"),
+    	new Array("12x3=36 ?","","true"),
     	];
     	
-    var parameters = location.search.substring(1).split("&");
-    var temp = parameters[0].split("=");
-    var pseudo = unescape(temp[1]);
-    temp = parameters[1].split("=");
-    var score_tactile = unescape(temp[1]);
-		  
     var i=0;
     var score_gestuel=0;
 	var clock;
@@ -159,7 +165,9 @@
 	        countdown: true,
 	        callbacks: {
 	        	stop: function() {
-			    	document.location.href = 'index.php?pseudo='+pseudo+'&score_tactile='+score_tactile+'&score_gestuel='+score_gestuel+"#scores";
+			    	var element = document.getElementById("score_gestuel");
+					element.value = score_gestuel;
+					element.form.submit();
 	        	}
 	        }
 	    });

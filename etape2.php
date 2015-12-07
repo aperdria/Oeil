@@ -34,16 +34,14 @@
     <?php include_once "menu_min.php" ?>
 
     <!-- Intro Section -->
-    <section id="about" class="about-section">
+    <section id="about" class="page-section">
         <div class="container">
-            <div class="row">
+            <div class="row" id="card">
 				<div class="col-md-12">
 						<h2 class="cover-heading">Etape 2</h2>
 						<p>Nous allons passer à la deuxième étape.</br>Vous n'avez plus de boutons sur l'interface tactile, vous devez cliquer sur les post-it placés dans l'habitacle.</br> Vous pouvez vous entrainer à appuyer sur les post-it grâce à la visualisation ci-dessous. Quand vous êtes prêt, appuyez sur Continuer.</p>
 						<a onclick="next()" class="btn btn-lg btn-default">Continuer</a>
 				 </div>
-				 
-				 
 				<div class="col-md-12"></br>
                     <svg id="myCanvas" width="200" height="200" background="green">
                         <rect id ="rect1" width="200" height="200" fill="#4BB3D6" opacity="0.9"/>
@@ -81,7 +79,12 @@
             </div>
         </div>
     </section>
-
+    
+    <form action="etape2_exercice.php" method="post">
+		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
+		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
+		<input type="hidden" name="score_tactile" id="score_tactile" value="<?php echo $_POST['score_tactile'] ?>">
+	</form>
    
     <!-- jQuery -->
     <script src="./js/jquery.js"></script>
@@ -95,12 +98,7 @@
     
 	<script type="text/javascript">
 	function next() {
-		var parameters = location.search.substring(1).split("&");
-		var temp = parameters[0].split("=");
-		var pseudo = unescape(temp[1]);
-		temp = parameters[1].split("=");
-		var score_tactile = unescape(temp[1]);
-		document.location.href = 'etape2_exercice.php?pseudo='+pseudo+'&score_tactile='+score_tactile;
+		document.getElementById("pseudo").form.submit();
 	}
 	</script>
 	

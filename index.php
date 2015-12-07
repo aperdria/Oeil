@@ -89,34 +89,7 @@
                     <p class="lead">Participez à une expérience innovante autour des nouveaux modes d'interactions Homme-Machine.</p></br>
                     <a class="btn btn-default btn-begin page-scroll" href="etape1.php"><h4>Commencer l'expérience</h4></a></br></br>
                     <a class="btn btn-default page-scroll" href="#scores">Voir les scores</a>
-                    <a class="btn btn-default page-scroll" href="#infos">Obtenir plus d'infos</a></br></br>
-                    
-                    <h4>Les trois meilleurs testeurs du jour : </h4>
-                    <?php
-						try {
-						   $db_handle = new PDO('sqlite:db.sqlite');
-						   $db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-						   $results = $db_handle->exec("CREATE TABLE IF NOT EXISTS scores (pseudo VARCHAR PRIMARY KEY, main VARCHAR, score_tactile INTEGER, score_gestuel INTEGER);");
-						   $pseudo = $_GET['pseudo'];
-						   $main = 'droite';
-						   $score_tactile = $_GET['score_tactile'];
-						   $score_gestuel = $_GET['score_gestuel'];
-						   if(!empty($pseudo) and !empty($main) and !empty($score_tactile) and !empty($score_gestuel)) {
-							   $req = $db_handle->prepare('INSERT INTO scores (pseudo,main,score_tactile,score_gestuel) VALUES (:pseudo,:main,:score_tactile,:score_gestuel);');
-							   $req->execute(array('pseudo'=>$pseudo,'main'=>$main,'score_tactile'=>$score_tactile,'score_gestuel'=>$score_gestuel));
-						   }
-						   $req = $db_handle->prepare("SELECT * FROM scores ORDER BY score_gestuel DESC LIMIT 3;");
-						   $req->execute();
-						   $result = $req->fetchAll();
-						   $i=1;
-						   foreach ($result as $score) {
-							   echo '<h5>'.$i.'. '.$score[0].'</h5>';
-							   $i++;
-						   }
-						} catch (Exception $e) {
-						   die('Erreur : '.$e->getMessage());
-						}
-						?>
+                    <a class="btn btn-default page-scroll" href="#infos">Obtenir plus d'infos</a></br></br> 
                 </div>
                 <div class="col-lg-2"></div>
                 
@@ -126,41 +99,98 @@
     </section>
 
     <!-- About Section -->
+    <?php 
+		$pseudo = $_POST['pseudo'];
+		$hand = $_POST['hand'];
+		$score_tactile = $_POST['score_tactile'];
+		$score_gestuel = $_POST['score_gestuel'];
+		 $date = date('y-m-d h:m:s');
+		// $date = '2015-12-06 17:00:45';
+    ?>
+    
     <section id="scores" class="about-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>Scores</h1>
-						<p id="score"></p>
-						<!--<a href="#" onclick="clearScore()" class="btn btn-lg btn-default">Réinitialiser</a>-->
+                    <h1>Meilleurs scores</h1>
+						<?php
+							if(!empty($pseudo) and !empty($score_tactile) and !empty($score_gestuel)) {
+								echo '<h3 style="color:#87ba76">'.$pseudo.', votre score est de '.$score_tactile.' en tactile, et de '.$score_gestuel.' en gestuel.</h3>';
+							}
+						?>
 						
+						
+                <div class="col-lg-6 col-md-6">
+                <h4>Scores en utilisant l'écran tactile</h4>
 						<table class="table table-striped">
 						<thead>
-						<tr>
-						<th>Pseudo</th>
-						<th>Score Tactile</th>
-						<th>Score Leap</th>
-						</tr>
+							<tr>
+							<th></th>
+							<th>Pseudo</th>
+							<th>Score Tactile</th>
+							</tr>
 						</thead>
 						<tbody id="score_table">
-	</script>
-	
-	<?php
-		try {
-		   $db_handle = new PDO('sqlite:db.sqlite');
-		   $db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		   $req = $db_handle->prepare("SELECT * FROM scores ORDER BY score_gestuel DESC;");
-		   $req->execute();
-		   $result = $req->fetchAll();
-		   foreach ($result as $score) {
-			   echo '<tr><td>'.$score[0].'</td><td>'.$score[2].'</td><td>'.$score[3].'</td></tr>';
-		   }
-		} catch (Exception $e) {
-		   die('Erreur : '.$e->getMessage());
-		}
-		?>						
+							<?php
+								try {
+									$db_handle = new PDO('sqlite:db.sqlite');
+									$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+									// Création de la table si elle n'existe pas
+									//$results = $db_handle->exec("DROP TABLE scores");
+									$results = $db_handle->exec("CREATE TABLE IF NOT EXISTS scores (id INTEGER PRIMARY KEY, pseudo VARCHAR, main VARCHAR, score_tactile INTEGER, score_gestuel INTEGER, date DATE);");
+									if(!empty($pseudo) and !empty($hand) and !empty($score_tactile) and !empty($score_gestuel)) {
+										// Insertion du nouveau score
+										$req = $db_handle->prepare('INSERT INTO scores (pseudo,main,score_tactile,score_gestuel, date) VALUES (:pseudo,:main,:score_tactile,:score_gestuel, :date);');
+										$req->execute(array('pseudo'=>$pseudo,'main'=>$hand,'score_tactile'=>$score_tactile,'score_gestuel'=>$score_gestuel,'date'=>$date));
+									}
+
+									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_tactile ASC) GROUP BY pseudo LIMIT 10;");
+									$req->execute();
+									$result = $req->fetchAll();
+									$cpt=1;
+									foreach ($result as $score) {
+									echo '<tr><td>'.$cpt.'</td><td>'.$score[1].'</td><td>'.$score[3].'</td></tr>';
+									$cpt++;
+									}
+								} catch (Exception $e) {
+									die('Erreur : '.$e->getMessage());
+								}
+							?>						
 						</tbody>
 						</table>
+                </div>
+                
+                <div class="col-lg-6 col-md-6">
+                <h4>Scores en utilisant les gestes</h4>
+						<table class="table table-striped">
+						<thead>
+							<tr>
+							<th></th>
+							<th>Pseudo</th>
+							<th>Score Gestuel</th>
+							</tr>
+						</thead>
+						<tbody id="score_table">
+							<?php
+								try {
+									$db_handle = new PDO('sqlite:db.sqlite');
+									$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_gestuel ASC) GROUP BY pseudo LIMIT 10;");
+									$req->execute();
+									$result = $req->fetchAll();
+									$cpt=1;
+									foreach ($result as $score) {
+									echo '<tr><td>'.$cpt.'</td><td>'.$score[1].'</td><td>'.$score[4].'</td></tr>';
+									$cpt++;
+									}
+								} catch (Exception $e) {
+									die('Erreur : '.$e->getMessage());
+								}
+							?>						
+						</tbody>
+						</table>
+                </div>
+						
                 </div>
             </div>
         </div>
@@ -179,7 +209,7 @@
                     Évaluation dans un contexte opérationnel des différentes innovations afin de mesurer le gain réel de leurs utilisations</br></br>
                     L’objectif principal de ce projet est de réaliser une preuve de concept autour des nouveaux modes d’interactions Homme-Machine de type contrôle gestuel dans un véhicule de type blindé. En effet, de nombreuses informations capitales sont transmises aux opérateurs et aux décisionnaires par le biais d’écrans de contrôle tactiles à l’intérieur de ces véhicules. Or, de part la nature de l’environnement (environnement confiné, mobile et bruyant), il est parfois difficile d’interagir avec ce type d’interface une fois sur le terrain. L’objectif de ce projet serait donc d’exploiter les nombreux espaces disponibles à l’intérieur de ces véhicules blindés, afin de les transformer en interface de commande, qui pourraient être utilisées pour faciliter les interactions
 des opérateurs sur le terrain.</p>
-                    <a class="btn btn-default page-scroll" href="#contact">Contactez-nous</a>
+                    <a class="btn btn-default page-scroll" href="#contact">Nous contacter</a>
                 </div>
                 <div class="col-lg-1"></div>
             </div>
@@ -223,91 +253,6 @@ des opérateurs sur le terrain.</p>
     <!-- Scrolling Nav JavaScript -->
     <script src="js/jquery.easing.min.js"></script>
     <script src="js/scrolling-nav.js"></script>
-    
-    <script type="text/javascript">
-    // TODO Faire marcher la sauvegarde SQLite
-    
-    if(location.search.length > 1 ) {
-	  	var parameters = location.search.substring(1).split("&");
-	    var temp = parameters[0].split("=");
-	    var pseudo = unescape(temp[1]);
-	    temp = parameters[1].split("=");
-		var score_tactile = unescape(temp[1]);
-	    temp = parameters[2].split("=");
-		var score_gestuel = unescape(temp[1]);
-		if(score_tactile != 'undefined' && score_gestuel != 'undefined')
-			showScore();
-		}
-					
-	  function showScore() {
-	    document.getElementById("score").innerHTML = pseudo + ", votre nombre de bonnes réponses est de " + score_tactile + " avec les boutons, et de "+score_gestuel+" avec les post-it." ;
-	  }
-	
-	function loadScoreHtml5 () {
-		html5sql.openDatabase("db","Score Database", 5*1024*1024);
-		html5sql.process(["CREATE TABLE IF NOT EXISTS scores (pseudo VARCHAR PRIMARY KEY, score_tactile INTEGER, score_gestuel INTEGER);",
-		"INSERT INTO scores VALUES ('Amelie', 45, 75);"],
-		function() {
-			console.log("Created table");
-		}, function(error, statement) {
-			console.log("Failed to create table" + error.msg);
-		});
-	}
-	
-		function showTable(){
-		
-			html5sql.process(["SELECT * FROM scores;"],
-				function(transaction, results, rowsArray){
-					for(var i = 0; i < rowsArray.length; i++){
-						console.log("<li>Retrieved" +rowsArray[i].name+"</li>");
-					}
-					console.log("<li>Done selecting data</li>");
-				},
-				function(error, statement){
-					console.log("<li>"+error.message+" Occured while processing: "+statement+"</li>");
-				}
-			);
-		}
-	
-	function loadScore () {
-		var SQL = window.SQL;
-		var xhr = new XMLHttpRequest();
-		var contents;
-		xhr.open('GET', './db.sqlite', true);
-		xhr.responseType = 'arraybuffer';
-		xhr.onload = function(e) {
-			var uInt8Array = new Uint8Array(xhr.response);
-			var db = new SQL.Database(uInt8Array);
-			
-			// db.run("CREATE TABLE scores (pseudo, score_tactile, score_gestuel));
-			
-			if(location.search.length > 1) 
-				db.run("INSERT INTO score VALUES (?,?,?)", [pseudo,score_tactile,score_gestuel]);
-			
-			contents = db.exec("SELECT * FROM score");
-			var table = "";
-			table += ('<tr><td>Amélie</td><td>67%</td><td>80%</td></tr>');
-			table += ('<tr><td>Nico</td><td>62%</td><td>92%</td></tr>');
-			/*
-			console.log(JSON.stringify(contents));
-			for (var item in contents.values) {
-				console.log("ok");
-				table += ('<tr><td>'+'test'+'</td><td>'+item[0]+'</td><td>'+item[1]+'</td></tr>');
-				console.log(item);
-			}*/
-			console.log(contents);
-			console.log(table);
-			document.getElementById("score_table").innerHTML = table;
-			var data = db.export();
-			var buffer = new Buffer(data);
-			fs.writeFileSync("db.sqlite", buffer);
-		};
-		xhr.send();
-		console.log(contents);
-	}
-		
-	
-
 
 </body>
 
