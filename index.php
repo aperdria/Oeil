@@ -100,12 +100,13 @@
 
     <!-- About Section -->
     <?php 
-		$pseudo = $_POST['pseudo'];
-		$hand = $_POST['hand'];
-		$score_tactile = $_POST['score_tactile'];
-		$score_gestuel = $_POST['score_gestuel'];
-		 $date = date('y-m-d h:m:s');
-		// $date = '2015-12-06 17:00:45';
+    	if(!empty($pseudo)) {
+			$pseudo = $_POST['pseudo'];
+			$hand = $_POST['hand'];
+			$score_tactile = $_POST['score_tactile'];
+			$score_gestuel = $_POST['score_gestuel'];
+			 $date = date('y-m-d h:m:s');
+		 }
     ?>
     
     <section id="scores" class="about-section">
