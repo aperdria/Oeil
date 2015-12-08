@@ -10,6 +10,9 @@
     <meta name="author" content="">
 
     <title>Projet Oeil</title>
+    <script type="text/javascript">
+        document.oncontextmenu = new Function("return false");
+    </script>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
