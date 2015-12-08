@@ -45,16 +45,16 @@
 				<div class="col-md-12">
 					<h2 class="cover-heading">Etape 1</h2>
 					<p class="lead">Bienvenue sur l'outil de test du projet Interaction.</br>Vous aurez dix secondes pour répondre aux questions qui vont vous être posées.</br>Entrez votre pseudo et appuyez sur commencer.</p>
-					<form action="etape1_exercice.php" method="POST">
+					<form action="etape1_exercice.php" method="POST" name="form" onsubmit="return checkForm()">
 						<input type="text" placeholder="Votre pseudo" name="pseudo">
 						<span class="help-block"></span>
 						<p>Avec quelle main tapez-vous sur l'écran ?</p>
 						<div class="radio">
 						  <label><input type="radio" name="hand" value="left">Gauche</label>
-						  <label><input type="radio" name="hand" value="right">Droite</label>
+						  <label><input type="radio" name="hand" value="right" checked>Droite</label>
 						</div>
-						<span class="help-block"></span>
 						<button type="submit" class="btn btn-default">Commencer</button>
+						<div id="error"></div>
 					</form>
 
 				 </div>
@@ -72,6 +72,18 @@
     <!-- Scrolling Nav JavaScript -->
     <script src="./js/jquery.easing.min.js"></script>
     <script src="./js/scrolling-nav.js"></script>
+
+	<script type="text/javascript">
+	function checkForm () {
+		if(document.form.pseudo.value == "") {
+			document.getElementById("error").innerHTML = '<p style="color:red; padding-top:10px;">Vous devez entrer un pseudo valide.</p>';
+			return false;
+		}
+		else {
+			return true;
+		}
+	};
+	</script>
 
 </body>
 

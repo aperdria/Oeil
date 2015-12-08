@@ -103,7 +103,7 @@
 
     <!-- About Section -->
     <?php 
-    	if(!empty($pseudo)) {
+    	if(!empty($_POST['pseudo'])) {
 			$pseudo = $_POST['pseudo'];
 			$hand = $_POST['hand'];
 			$score_tactile = $_POST['score_tactile'];
@@ -148,7 +148,7 @@
 										$req->execute(array('pseudo'=>$pseudo,'main'=>$hand,'score_tactile'=>$score_tactile,'score_gestuel'=>$score_gestuel,'date'=>$date));
 									}
 
-									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_tactile ASC) GROUP BY pseudo LIMIT 10;");
+									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_tactile DESC) GROUP BY pseudo ORDER BY score_tactile DESC LIMIT 10;");
 									$req->execute();
 									$result = $req->fetchAll();
 									$cpt=1;
@@ -179,7 +179,7 @@
 								try {
 									$db_handle = new PDO('sqlite:db.sqlite');
 									$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_gestuel ASC) GROUP BY pseudo LIMIT 10;");
+									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_gestuel DESC) GROUP BY pseudo ORDER BY score_gestuel DESC LIMIT 10;");
 									$req->execute();
 									$result = $req->fetchAll();
 									$cpt=1;
