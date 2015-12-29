@@ -1,31 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Projet Oeil</title>
-    <script type="text/javascript">
-        document.oncontextmenu = new Function("return false");
-    </script>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="./css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="./css/scrolling-nav.css" rel="stylesheet">
-	<link rel="stylesheet" href="./css/style.css">
-	<link rel="stylesheet" href="./css/flipclock.css">
-
-</head>
-
-<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
-
+<?php include_once("head.php"); ?>
 	
 
 <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
@@ -33,29 +9,13 @@
     
     <?php include_once "menu_min.php" ?>
 
-    <!-- Intro Section -->
-    <section id="about" class="about-section">
-        <div class="container">
-            <div class="row" id="card">
-				<div class="col-md-12">
-					<div id="score"></div></br></br>
-					<div class="col-md-12">
-						<div class="col-md-4"></div>
-						<div class="col-md-4"><div class="flip-clock-wrapper clock"></div></div>
-						<div class="col-md-4"></div>
-					</div><div id="buttons">
-						<a href="#" onclick="next_yes()" class="btn btn-lg btn-default">Oui</a>
-						<a href="#" onclick="next_no()" class="btn btn-lg btn-default">Non</a>
-					</div>
-					<div class="col-md-12"><div id="exercice"></div></div>
-					
-					
-				 </div>
-            </div>
-        </div>
-    </section>
+	
+	<!-- EXERCICE (Same than exercice 1) -->
+    <?php include_once "exercice.php" ?>
 
-	<form action="index.php#score" method="post">
+
+	<!-- This form is used to send values to the next page, we send the pseudo, the hand and the statistics (id_question, score, delay_to_answer) contained in an array -->
+	<form action="index.php#scores" method="post">
 		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
 		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
 		<input type="hidden" name="stats_tactile" id="stats_tactile" value="<?php echo $_POST['stats_tactile'] ?>">
@@ -75,23 +35,10 @@
     
     <script src="./js/sql.js"></script>
 
+	<!-- MAIN SCRIPT -->
     <script type="text/javascript">
     
     var stats_gestural = [];
-    
-    // Load question
-    <?php
-		try {
-			$db_handle = new PDO('sqlite:oeil.sqlite');
-			$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			
-			$req = $db_handle->prepare("SELECT * FROM question");
-			$req->execute();
-			$questions = $req->fetchAll();
-		} catch (Exception $e) {
-			die('Erreur : '.$e->getMessage());
-		}
-	?>
 	
 	// To display questions
     var questions = <?php echo json_encode($questions); ?>;  
@@ -138,7 +85,6 @@
 		stats_gestural[cpt][0] = questions[i]['id_question'];
 		stats_gestural[cpt][1] = delay;
 		stats_gestural[cpt][2] = score;
-		console.log(stats_gestural.join(';'));
 		
 		// Display a new question
 		i_prev = i;
@@ -183,14 +129,18 @@
     }
 		
 	function clock() {
-		clock = $('.clock').FlipClock(20, {
+		clock = $('.clock').FlipClock(10, {
 	        clockFace: 'MinuteCounter',
 	        countdown: true,
 	        callbacks: {
 	        	stop: function() {
-					var element = document.getElementById("stats_gestural");
-					element.value = stats_gestural.join(';');
-					element.form.submit();
+		        	if(cpt==0) {
+			        	document.location.href="index.php"
+		        	} else {
+						var element = document.getElementById("stats_gestural");
+						element.value = stats_gestural.join(';');
+						element.form.submit();
+					}
 	        	}
 	        }
 	    });

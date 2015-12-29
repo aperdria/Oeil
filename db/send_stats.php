@@ -2,7 +2,7 @@
 if (!empty($_POST))
 {
 	try {
-		$db_handle = new PDO('sqlite:oeil.sqlite');
+		$db_handle = new PDO('sqlite:db/oeil.sqlite');
 		$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$pseudo = $_POST['pseudo'];
@@ -21,8 +21,6 @@ if (!empty($_POST))
 		$req = $db_handle->prepare('INSERT INTO game (pseudo_player, date) VALUES (:pseudo_player, :date);');
 		$req->execute(array('pseudo_player'=>$pseudo, 'date'=>$date));
 		$game_id = $db_handle->lastInsertId();
-		echo "game_id=".$game_id."</br>";
-		echo "tactile=".$tactile."</br>";
 
 		// Insertion des statistiques sur chaque itération
 		foreach($stats_tactile as $iteration) {
@@ -40,11 +38,13 @@ if (!empty($_POST))
 		
 		$req = $db_handle->prepare("SELECT SUM(score) FROM iteration where id_game=:id_game AND mode=:mode;");
 		$req->execute(array('id_game'=>$game_id, 'mode'=>$tactile));
-		$_POST['score_tactile'] = $req->fetch();
+		$res = $req->fetch();
+		$_POST['score_tactile'] = $res[0];
 		
 		$req = $db_handle->prepare("SELECT SUM(score) FROM iteration where id_game=:id_game AND mode=:mode;");
 		$req->execute(array('id_game'=>$game_id, 'mode'=>$gestural));
-		$_POST['score_gestural'] = $req->fetch();
+		$res = $req->fetch();
+		$_POST['score_gestural'] = $res[0];
 	} catch (Exception $e)
 	{
 		die('Erreur : '.$e->getMessage());

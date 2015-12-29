@@ -1,34 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Projet Oeil</title>
-    <script type="text/javascript">
-        document.oncontextmenu = new Function("return false");
-    </script>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/scrolling-nav.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
+<?php include_once("head.php"); ?>
 
 <!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
 
@@ -44,7 +18,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">OEil</a>
+                <a class="navbar-brand page-scroll" href="index.php">OEil</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -101,25 +75,17 @@
         </div>
     </section>
 
-
-    <?php 
-    	include_once "create_database.php";
-    ?>
-
-    <!-- About Section -->
-    <?php
-    	if(!empty($_POST)) {
-			include_once "send_stats.php";
-		 }
-    ?>
 			
     <section id="scores" class="about-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <h1>Meilleurs scores</h1>
+						<!-- Initialize database and send statistics if someone has just played -->
 						<?php
-							if(!empty($_POST['score_tactile']) and !empty($_POST[$score_gestural])) {
+							include_once "db/create_database.php";
+							if(!empty($_POST)) {
+								include_once "db/send_stats.php";
 								echo '<h3 style="color:#87ba76">'.$_POST['pseudo'].', votre score est de '.$_POST['score_tactile'].' en tactile,  de '.$_POST['score_gestural'].' en gestuel.</h3>';
 							}
 						?>
@@ -138,27 +104,8 @@
 						</thead>
 						<tbody id="score_table">
 							<?php
-								try {
-									$db_handle = new PDO('sqlite:oeil.sqlite');
-									$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-									$req = $db_handle->prepare("
-										SELECT p.pseudo, sum(it.score) as score_tactile, avg(delay_answer) as delay
-										FROM iteration it, game g, player p
-										WHERE g.id_game = it.id_game and g.pseudo_player = p.pseudo and it.mode = 0
-										GROUP BY p.pseudo
-										ORDER BY score_tactile DESC
-										LIMIT 10;");
-									$req->execute();
-									$result = $req->fetchAll();
-									$cpt=1;
-									foreach ($result as $score) {
-									echo '<tr><td>'.$cpt.'</td><td>'.$score[0].'</td><td>'.$score[1].'</td><td>'.(round($score[2]*0.001,2)).' seconde(s)</td></tr>';
-									$cpt++;
-									}
-								} catch (Exception $e) {
-									die('Erreur : '.$e->getMessage());
-								}
-							?>						
+								include_once "db/get_score_tactile.php";
+							?>					
 						</tbody>
 						</table>
                 </div>
@@ -176,26 +123,7 @@
 						</thead>
 						<tbody id="score_table">
 							<?php
-								try {
-									$db_handle = new PDO('sqlite:oeil.sqlite');
-									$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-									$req = $db_handle->prepare("
-										SELECT p.pseudo, sum(it.score) as score_tactile, avg(delay_answer) as delay
-										FROM iteration it, game g, player p
-										WHERE g.id_game = it.id_game and g.pseudo_player = p.pseudo and it.mode = 1
-										GROUP BY p.pseudo
-										ORDER BY score_tactile DESC
-										LIMIT 10;");
-									$req->execute();
-									$result = $req->fetchAll();
-									$cpt=1;
-									foreach ($result as $score) {
-									echo '<tr><td>'.$cpt.'</td><td>'.$score[0].'</td><td>'.$score[1].'</td><td>'.(round($score[2]*0.001,2)).' seconde(s)</td></tr>';
-									$cpt++;
-									}
-								} catch (Exception $e) {
-									die('Erreur : '.$e->getMessage());
-								}
+								include_once "db/get_score_gestural.php";
 							?>			
 						</tbody>
 						</table>

@@ -32,6 +32,14 @@ body {
   font-family: 'Black Ops';
   src: url('../fonts/BlackOpsOne-Regular.ttf');
 }
+#transparent {
+width: 200px;
+height: 100px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+background: transparent;
+}
 #rectangle-blue {
 width: 200px;
 height: 100px;
@@ -145,4 +153,24 @@ background: red;
    padding: 0 !important;
    margin: 0 !important;
 }
-
+.btn-exercice-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.btn-exercice-md {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.btn-exercice-lg {
+  padding: 30px 50px;
+  font-size: 20px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.selected {
+	background-color: #cccccc;
+}

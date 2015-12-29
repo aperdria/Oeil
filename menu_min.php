@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">OEil</a>
+            <a class="navbar-brand page-scroll" href="index.php">OEil</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
