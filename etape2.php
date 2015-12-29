@@ -21,26 +21,20 @@
 				 </div>
 				<div class="col-md-12"></br>
                     <svg id="myCanvas" width="200" height="200" background="green">
-                        <rect id ="rect1" width="200" height="200" fill="#4BB3D6" opacity="0.9"/>
+                        <rect id ="rect1" width="200" height="200" fill="#F7230C" opacity="0.9"/>
                         <circle id="circle1" cx="100" cy="100" r="8" stroke="black" stroke-width="3" fill="black" opacity="0.8"/>
                         <text x="62" y="20" fill="black">Interface 1</text>
                     </svg>
 
                     <svg id="myCanvas2" width="200" height="200" background="green">
-                        <rect id ="rect2" width="200" height="200" fill="#7AD678" opacity="0.9"/>
+                        <rect id ="rect2" width="200" height="200" fill="#F7230C" opacity="0.9"/>
                         <circle id="circle2" cx="100" cy="100" r="8" stroke="black" stroke-width="3" fill="black" opacity="0.8"/>
                         <text x="62" y="20" fill="black">Interface 2</text>
                     </svg>
                 </div>
                         
 				<div class="col-md-12">
-                    <div class="col-md-3">
-                        <h4><b>Interface</b></h4>
-                        <div id="frameData"></div>
-                        <div style="clear:both;"></div>
-                    </div>
-
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <h4><b>Mains</b></h4>
                         <div id="handData"></div>
                         <div style="clear:both;"></div>
@@ -79,7 +73,7 @@
 	}
 	</script>
 	
-	    <!--Inclusion pour le Leap Motion-->
+	    <!-- Leap Motion -->
         <script src="./js/three.js"></script>
         <script src="./js/leap.min.js"></script>
         <script type="text/javascript" src="./js/donnees_leap.js"></script>
@@ -109,6 +103,11 @@
                 positions2 = JSON.parse(monobjet_json);
                 plane2 = createPlane(plane2,positions2);
             }
+
+            function touch_yes()
+            {}
+            function touch_no()
+            {}
         </script>
 </body>
 
