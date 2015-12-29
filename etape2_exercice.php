@@ -75,6 +75,35 @@
     
     <script src="./js/sql.js"></script>
 
+    <!-- Leap Motion -->
+    <script src="./js/three.js"></script>
+    <script src="./js/leap.min.js"></script>
+    <script type="text/javascript" src="./js/donnees_leap.js"></script>
+
+
+     <!-- Js gérant le Leap Motion-->
+    <script>           
+        //Gère les initialisations des boutons
+        $(document).ready(function()
+        {
+            displayData = false;
+        });
+
+        //Chargement des positions des postits à partir du localStorage
+        var monobjet_json = localStorage.getItem("positions1");
+        if(monobjet_json != null)
+        {
+            positions1 = JSON.parse(monobjet_json);
+            plane1 = createPlane(plane1,positions1);
+        }
+        monobjet_json = localStorage.getItem("positions2");
+        if(monobjet_json != null)
+        {
+            positions2 = JSON.parse(monobjet_json);
+            plane2 = createPlane(plane2,positions2);
+        }
+    </script>
+    
     <script type="text/javascript">
     
     var stats_gestural = [];
@@ -116,6 +145,16 @@
 
 	// Start the timer
 	clock();
+
+	function touch_yes()
+    {
+        next_yes();
+    }
+
+    function touch_no()
+    {
+        next_no();
+    }
     
     function next_yes() {
     
