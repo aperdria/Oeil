@@ -86,7 +86,7 @@
     <form action="etape2_exercice.php" method="post">
 		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
 		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
-		<input type="hidden" name="score_tactile" id="score_tactile" value="<?php echo $_POST['score_tactile'] ?>">
+		<input type="hidden" name="stats_tactile" id="stats_tactile" value="<?php echo $_POST['stats_tactile'] ?>">
 	</form>
    
     <!-- jQuery -->

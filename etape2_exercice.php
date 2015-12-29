@@ -21,21 +21,16 @@
     <link href="./css/scrolling-nav.css" rel="stylesheet">
 	<link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" href="./css/flipclock.css">
-	
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
 </head>
 
 <!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
 
+	
+
 <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
 
-   
+    
     <?php include_once "menu_min.php" ?>
 
     <!-- Intro Section -->
@@ -48,23 +43,23 @@
 						<div class="col-md-4"></div>
 						<div class="col-md-4"><div class="flip-clock-wrapper clock"></div></div>
 						<div class="col-md-4"></div>
-					</div>
-					<div id="buttons">
+					</div><div id="buttons">
 						<a href="#" onclick="next_yes()" class="btn btn-lg btn-default">Oui</a>
 						<a href="#" onclick="next_no()" class="btn btn-lg btn-default">Non</a>
 					</div>
-					<div class="col-md-12" style="padding:20px; min-height:100px;"><div id="exercice"></div></div>
+					<div class="col-md-12"><div id="exercice"></div></div>
+					
+					
 				 </div>
-            </div>
             </div>
         </div>
     </section>
 
-   <form action="index.php#scores" method="post">
+	<form action="index.php#score" method="post">
 		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
 		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
-		<input type="hidden" name="score_tactile" id="score_tactile" value="<?php echo $_POST['score_tactile'] ?>">
-		<input type="hidden" name="score_gestuel" id="score_gestuel">
+		<input type="hidden" name="stats_tactile" id="stats_tactile" value="<?php echo $_POST['stats_tactile'] ?>">
+		<input type="hidden" name="stats_gestural" id="stats_gestural" value="<?php echo $_POST['stats_gestural'] ?>">
 	</form>
    
     <!-- jQuery -->
@@ -77,89 +72,114 @@
     <script src="./js/jquery.easing.min.js"></script>
     <script src="./js/scrolling-nav.js"></script>
     <script src="./js/flipclock.js"></script>
-
-    <!-- Leap Motion -->
-    <script src="./js/three.js"></script>
-    <script src="./js/leap.min.js"></script>
-    <script type="text/javascript" src="./js/donnees_leap.js"></script>
-
-    <!-- Js gérant le Leap Motion-->
-    <script>           
-        //Gère les initialisations des boutons
-        $(document).ready(function()
-        {
-            displayData = false;
-        });
-
-        //Chargement des positions des postits à partir du localStorage
-        var monobjet_json = localStorage.getItem("positions1");
-        if(monobjet_json != null)
-        {
-            positions1 = JSON.parse(monobjet_json);
-            plane1 = createPlane(plane1,positions1);
-        }
-        monobjet_json = localStorage.getItem("positions2");
-        if(monobjet_json != null)
-        {
-            positions2 = JSON.parse(monobjet_json);
-            plane2 = createPlane(plane2,positions2);
-        }
-    </script>
-
     
+    <script src="./js/sql.js"></script>
+
     <script type="text/javascript">
-    // TODO Externaliser dans un fichier XML
-    var table = [
-    	new Array("Le rond est bleu ?","circle-red","false"),
-    	new Array("Le rectangle est vert ?","rectangle-green","true"),
-    	new Array("Le rond est rouge ?","circle-blue","false"),
-    	new Array("Le triangle est vert ?","triangle-up-red","false"),
-    	new Array("Le triangle est bleu ?","triangle-up-blue","true"),
-    	new Array("4x6=21 ?","","false"),
-    	new Array("3x9=28 ?","","false"),
-    	new Array("4x7=28 ?","","true"),
-    	new Array("256/2=123 ?","","false"),
-    	new Array("7x8=49 ?","","false"),
-    	new Array("4x8=32 ?","","true"),
-    	new Array("12x3=36 ?","","true"),
-    	];
-    	
+    
+    var stats_gestural = [];
+    
+    // Load question
+    <?php
+		try {
+			$db_handle = new PDO('sqlite:oeil.sqlite');
+			$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			
+			$req = $db_handle->prepare("SELECT * FROM question");
+			$req->execute();
+			$questions = $req->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : '.$e->getMessage());
+		}
+	?>
+	
+	// To display questions
+    var questions = <?php echo json_encode($questions); ?>;  
     var i=0;
-    var score_gestuel=0;
+    var i_prev=0;
+    
+    // To display the score
+    var cpt=0;
+    var score_gestural=0;
 	var clock;
+	
+	// To calculate delay between two clicks
+	var d = new Date;
+	var t = d.getTime();
+	var lastClick = t;
+	var delay = 0;
     
-    i = Math.floor(Math.random()*table.length);
-	document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
-	document.getElementById("score").innerHTML =  ' bonnes réponses';
+    // Display the first question
+    i = Math.floor(Math.random()*questions.length);
+	document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
+	document.getElementById("score").innerHTML = '0/'+cpt;
 
-    
+	// Start the timer
 	clock();
-
-    function touch_yes()
-    {
-        next_yes();
-    }
-
-    function touch_no()
-    {
-        next_no();
-    }
     
     function next_yes() {
-    	if(table[i][2] == "true")
-    		score_gestuel++;
-    	i = Math.floor(Math.random()*table.length);
-	    document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
-		document.getElementById("score").innerHTML = score_gestuel+' bonnes réponses';
-
+    
+    	// Delay to click
+    	d = new Date();
+    	t = d.getTime();
+    	delay = t - lastClick;
+    	lastClick = t;
+    	
+    	// Check if the answer is correct
+    	if(questions[i]['answer'] == "true") {
+    		score_gestural++;
+    		score=1;
+    	} else {
+	    	score=0;
+    	}
+    	
+    	// Count the iteration in statistics
+    	stats_gestural[cpt] = new Array(3);
+		stats_gestural[cpt][0] = questions[i]['id_question'];
+		stats_gestural[cpt][1] = delay;
+		stats_gestural[cpt][2] = score;
+		console.log(stats_gestural.join(';'));
+		
+		// Display a new question
+		i_prev = i;
+		while(i==i_prev)
+			i = Math.floor(Math.random()*questions.length);
+			
+	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
+		document.getElementById("score").innerHTML = score_gestural+'/'+(cpt+1);
+		cpt++;
     }
     
     function next_no() {
-    	if(table[i][2] == "false")
-			score_gestuel++;
-    	i = Math.floor(Math.random()*table.length);
-	    document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
-	    document.getElementById("score").innerHTML = score_gestuel+' bonnes réponses';
+       	// Delay to click
+    	d = new Date();
+    	t = d.getTime();
+    	delay = t - lastClick;
+    	lastClick = t;
+    
+    	//Check if the answer is correct
+    	if(questions[i]['answer'] == "false") {
+    		score_gestural++;
+    		score=1;
+    	} else {
+	    	score=0;
+    	}
+    	
+    	// Count the iteration in statistics
+    	stats_gestural[cpt] = new Array(3);
+		stats_gestural[cpt][0] = questions[i]['id_question'];
+		stats_gestural[cpt][1] = delay;
+		stats_gestural[cpt][2] = score;
+		console.log(stats_gestural.join(';'));
+		
+		// Display a new question
+		i_prev = i;
+		while(i==i_prev)
+			i = Math.floor(Math.random()*questions.length);
+			
+	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
+		document.getElementById("score").innerHTML = score_gestural+'/'+(cpt+1);
+		cpt++;
     }
 		
 	function clock() {
@@ -168,8 +188,8 @@
 	        countdown: true,
 	        callbacks: {
 	        	stop: function() {
-			    	var element = document.getElementById("score_gestuel");
-					element.value = score_gestuel;
+					var element = document.getElementById("stats_gestural");
+					element.value = stats_gestural.join(';');
 					element.form.submit();
 	        	}
 	        }

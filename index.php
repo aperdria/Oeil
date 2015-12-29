@@ -101,25 +101,26 @@
         </div>
     </section>
 
-    <!-- About Section -->
+
     <?php 
-    	if(!empty($_POST['pseudo'])) {
-			$pseudo = $_POST['pseudo'];
-			$hand = $_POST['hand'];
-			$score_tactile = $_POST['score_tactile'];
-			$score_gestuel = $_POST['score_gestuel'];
-			 $date = date('y-m-d h:m:s');
+    	include_once "create_database.php";
+    ?>
+
+    <!-- About Section -->
+    <?php
+    	if(!empty($_POST)) {
+			include_once "send_stats.php";
 		 }
     ?>
-    
+			
     <section id="scores" class="about-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <h1>Meilleurs scores</h1>
 						<?php
-							if(!empty($pseudo) and !empty($score_tactile) and !empty($score_gestuel)) {
-								echo '<h3 style="color:#87ba76">'.$pseudo.', votre score est de '.$score_tactile.' en tactile, et de '.$score_gestuel.' en gestuel.</h3>';
+							if(!empty($_POST['score_tactile']) and !empty($_POST[$score_gestural])) {
+								echo '<h3 style="color:#87ba76">'.$_POST['pseudo'].', votre score est de '.$_POST['score_tactile'].' en tactile,  de '.$_POST['score_gestural'].' en gestuel.</h3>';
 							}
 						?>
 						
@@ -132,28 +133,26 @@
 							<th></th>
 							<th>Pseudo</th>
 							<th>Score Tactile</th>
+							<th>Vitesse moyenne de clic</th>
 							</tr>
 						</thead>
 						<tbody id="score_table">
 							<?php
 								try {
-									$db_handle = new PDO('sqlite:db.sqlite');
+									$db_handle = new PDO('sqlite:oeil.sqlite');
 									$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-									// Création de la table si elle n'existe pas
-									//$results = $db_handle->exec("DROP TABLE scores");
-									$results = $db_handle->exec("CREATE TABLE IF NOT EXISTS scores (id INTEGER PRIMARY KEY, pseudo VARCHAR, main VARCHAR, score_tactile INTEGER, score_gestuel INTEGER, date DATE);");
-									if(!empty($pseudo) and !empty($hand) and !empty($score_tactile) and !empty($score_gestuel)) {
-										// Insertion du nouveau score
-										$req = $db_handle->prepare('INSERT INTO scores (pseudo,main,score_tactile,score_gestuel, date) VALUES (:pseudo,:main,:score_tactile,:score_gestuel, :date);');
-										$req->execute(array('pseudo'=>$pseudo,'main'=>$hand,'score_tactile'=>$score_tactile,'score_gestuel'=>$score_gestuel,'date'=>$date));
-									}
-
-									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_tactile DESC) GROUP BY pseudo ORDER BY score_tactile DESC LIMIT 10;");
+									$req = $db_handle->prepare("
+										SELECT p.pseudo, sum(it.score) as score_tactile, avg(delay_answer) as delay
+										FROM iteration it, game g, player p
+										WHERE g.id_game = it.id_game and g.pseudo_player = p.pseudo and it.mode = 0
+										GROUP BY p.pseudo
+										ORDER BY score_tactile DESC
+										LIMIT 10;");
 									$req->execute();
 									$result = $req->fetchAll();
 									$cpt=1;
 									foreach ($result as $score) {
-									echo '<tr><td>'.$cpt.'</td><td>'.$score[1].'</td><td>'.$score[3].'</td></tr>';
+									echo '<tr><td>'.$cpt.'</td><td>'.$score[0].'</td><td>'.$score[1].'</td><td>'.(round($score[2]*0.001,2)).' seconde(s)</td></tr>';
 									$cpt++;
 									}
 								} catch (Exception $e) {
@@ -172,25 +171,32 @@
 							<th></th>
 							<th>Pseudo</th>
 							<th>Score Gestuel</th>
+							<th>Vitesse moyenne de clic</th>
 							</tr>
 						</thead>
 						<tbody id="score_table">
 							<?php
 								try {
-									$db_handle = new PDO('sqlite:db.sqlite');
+									$db_handle = new PDO('sqlite:oeil.sqlite');
 									$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-									$req = $db_handle->prepare("SELECT * FROM (SELECT * from scores ORDER BY score_gestuel DESC) GROUP BY pseudo ORDER BY score_gestuel DESC LIMIT 10;");
+									$req = $db_handle->prepare("
+										SELECT p.pseudo, sum(it.score) as score_tactile, avg(delay_answer) as delay
+										FROM iteration it, game g, player p
+										WHERE g.id_game = it.id_game and g.pseudo_player = p.pseudo and it.mode = 1
+										GROUP BY p.pseudo
+										ORDER BY score_tactile DESC
+										LIMIT 10;");
 									$req->execute();
 									$result = $req->fetchAll();
 									$cpt=1;
 									foreach ($result as $score) {
-									echo '<tr><td>'.$cpt.'</td><td>'.$score[1].'</td><td>'.$score[4].'</td></tr>';
+									echo '<tr><td>'.$cpt.'</td><td>'.$score[0].'</td><td>'.$score[1].'</td><td>'.(round($score[2]*0.001,2)).' seconde(s)</td></tr>';
 									$cpt++;
 									}
 								} catch (Exception $e) {
 									die('Erreur : '.$e->getMessage());
 								}
-							?>						
+							?>			
 						</tbody>
 						</table>
                 </div>
@@ -232,8 +238,8 @@ des opérateurs sur le terrain.</p>
                 <div class="col-lg-6">
                      <img src="./img/thales.png" alt="" class="img-responsive center-block" style="width:50%">
                     <h3>Porteur de projet</h3>
-                    <h4>Thalès</h4>
-                    <p>Thalès Communication & Security</p>
+                    <h4>Thales</h4>
+                    <p>Thales Communication & Security</p>
                     <p>Marc Dehondt</p>
                 </div>
                 <div class="col-lg-6">

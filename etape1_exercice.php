@@ -26,6 +26,8 @@
 
 <!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
 
+	
+
 <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
 
     
@@ -55,8 +57,7 @@
 
 	<form action="etape2.php" method="post">
 		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
-		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
-		<input type="hidden" name="score_tactile" id="score_tactile">
+		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">		<input type="hidden" name="stats_tactile" id="stats_tactile" value="<?php echo $_POST['stats_tactile'] ?>">
 	</form>
    
     <!-- jQuery -->
@@ -70,54 +71,112 @@
     <script src="./js/scrolling-nav.js"></script>
     <script src="./js/flipclock.js"></script>
     
+    <script src="./js/sql.js"></script>
+
     <script type="text/javascript">
-    // TODO Externaliser dans un fichier XML
-    var table = [
-    	new Array("Le rond est bleu ?","circle-red","false"),
-    	new Array("Le rectangle est vert ?","rectangle-green","true"),
-    	new Array("Le rond est rouge ?","circle-blue","false"),
-    	new Array("Le triangle est vert ?","triangle-up-red","false"),
-    	new Array("Le triangle est bleu ?","triangle-up-blue","true"),
-    	new Array("4x6=21 ?","","false"),
-    	new Array("3x9=28 ?","","false"),
-    	new Array("4x7=28 ?","","true"),
-    	new Array("256/2=123 ?","","false"),
-    	new Array("7x8=49 ?","","false"),
-    	new Array("4x8=32 ?","","true"),
-    	new Array("12x3=36 ?","","true"),
-    	];
-    	
-    var parameters = location.search.substring(1).split("&");
-    var temp = parameters[0].split("=");
-    var pseudo = unescape(temp[1]);
-		  
+    
+    var stats_tactile = [];
+    
+    // Load question
+    <?php
+		try {
+			$db_handle = new PDO('sqlite:oeil.sqlite');
+			$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			
+			$req = $db_handle->prepare("SELECT * FROM question");
+			$req->execute();
+			$questions = $req->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : '.$e->getMessage());
+		}
+	?>
+	
+	// To display questions
+    var questions = <?php echo json_encode($questions); ?>;  
     var i=0;
-    var cpt=1;
+    var i_prev=0;
+    
+    // To display the score
+    var cpt=0;
     var score_tactile=0;
 	var clock;
+	
+	// To calculate delay between two clicks
+	var d = new Date;
+	var t = d.getTime();
+	var lastClick = t;
+	var delay = 0;
     
-    i = Math.floor(Math.random()*table.length);
-	document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
+    // Display the first question
+    i = Math.floor(Math.random()*questions.length);
+	document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
 	document.getElementById("score").innerHTML = '0/'+cpt;
 
-    
+	// Start the timer
 	clock();
     
     function next_yes() {
-    	if(table[i][2] == "true")
+    
+    	// Delay to click
+    	d = new Date();
+    	t = d.getTime();
+    	delay = t - lastClick;
+    	lastClick = t;
+    	
+    	// Check if the answer is correct
+    	if(questions[i]['answer'] == "true") {
     		score_tactile++;
-    	i = Math.floor(Math.random()*table.length);
-	    document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
-		document.getElementById("score").innerHTML = score_tactile+'/'+cpt;
+    		score=1;
+    	} else {
+	    	score=0;
+    	}
+    	
+    	// Count the iteration in statistics
+    	stats_tactile[cpt] = new Array(3);
+		stats_tactile[cpt][0] = questions[i]['id_question'];
+		stats_tactile[cpt][1] = delay;
+		stats_tactile[cpt][2] = score;
+		console.log(stats_tactile.join(';'));
+		
+		// Display a new question
+		i_prev = i;
+		while(i==i_prev)
+			i = Math.floor(Math.random()*questions.length);
+			
+	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
+		document.getElementById("score").innerHTML = score_tactile+'/'+(cpt+1);
 		cpt++;
     }
     
     function next_no() {
-    	if(table[i][2] == "false")
-			score_tactile++;
-    	i = Math.floor(Math.random()*table.length);
-	    document.getElementById("exercice").innerHTML = '<h3>'+table[i][0]+'</h3><div id="'+table[i][1]+'"></div>';
-		document.getElementById("score").innerHTML = score_tactile+'/'+cpt;
+       	// Delay to click
+    	d = new Date();
+    	t = d.getTime();
+    	delay = t - lastClick;
+    	lastClick = t;
+    
+    	//Check if the answer is correct
+    	if(questions[i]['answer'] == "false") {
+    		score_tactile++;
+    		score=1;
+    	} else {
+	    	score=0;
+    	}
+    	
+    	// Count the iteration in statistics
+    	stats_tactile[cpt] = new Array(3);
+		stats_tactile[cpt][0] = questions[i]['id_question'];
+		stats_tactile[cpt][1] = delay;
+		stats_tactile[cpt][2] = score;
+		console.log(stats_tactile.join(';'));
+		
+		// Display a new question
+		i_prev = i;
+		while(i==i_prev)
+			i = Math.floor(Math.random()*questions.length);
+			
+	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
+		document.getElementById("score").innerHTML = score_tactile+'/'+(cpt+1);
 		cpt++;
     }
 		
@@ -127,8 +186,8 @@
 	        countdown: true,
 	        callbacks: {
 	        	stop: function() {
-					var element = document.getElementById("score_tactile");
-					element.value = score_tactile;
+					var element = document.getElementById("stats_tactile");
+					element.value = stats_tactile.join(';');
 					element.form.submit();
 	        	}
 	        }
