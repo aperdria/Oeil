@@ -10,28 +10,19 @@
 
 
     <?php include_once "menu_min.php" ?>
-    <?php
-		try {
-			$db_handle = new PDO('sqlite:db/oeil.sqlite');
-			$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			
-			$req = $db_handle->prepare("SELECT * FROM question");
-			$req->execute();
-			$questions = $req->fetchAll();
-			
-			$req = $db_handle->prepare("SELECT size FROM calibration_buttons ORDER BY date DESC LIMIT 1");
-			$req->execute();
-			$size_buttons = $req->fetch();
-			$size_buttons = $size_buttons[0];
-		} catch (Exception $e) {
-			die('Erreur : '.$e->getMessage());
-		}
-	?>
+    
+
 
     <!-- Intro Section -->
-    <section id="about" class="page-section">
+    <section id="about" class="about-section">
         <div class="container">
          <div class="row">
+         	<?php 
+					include_once("db/functions_db.php");
+					$bdd = connexion();
+					$size_buttons = "medium";
+					$size_buttons = get_buttons_size($bdd);
+				?>
 				<div class="col-md-12">
 					<h3 class="cover-heading" id="config">Configuration de l'expérience</h3>
 					<p class="lead">Cette page vous permet de configurer la taille des boutons tels qu'ils sont affichés à l'écran, et de calibrer l'espace de capture, c'est à dire les post-it destinés à remplacer ces boutons.</p>
@@ -114,14 +105,17 @@
 
 		<script type="text/javascript">
 			function changeSize(size,size_fr) {
-			var date = new Date();
 	            $.ajax({
 	                type: 'POST',
-	                url: 'db/send_calib_buttons.php',
-	                data: 'size_buttons='+size + '&date=' + date,
+	                url: 'db/send_calib.php',
+	                data: 'size_buttons='+size,
 	                dataType: 'html', 
 	                success: function(data) {
 						$("#success_btn").text("Taille des boutons réglée sur " + size_fr);
+	                },
+	                error: function(data) {
+		                $("#success").text("");
+						$("#error").text(data);
 	                }
 	            });
 	            
@@ -211,6 +205,50 @@
 		            $(this).css('background-color','#eeeeee');
 		            console.log("positions.bottomRight: "+positions.bottomRight);
 		        });
+		        
+		        /* 
+		        // FOR TESTS WITHOUT LEAP
+				$("#touch-top-left").click(function(){
+		            positions.topLeft = {
+		                x : 0,    //Position au bout du premier doigt sur l'axe x
+		                y : 0,
+		                z : 0
+		            }
+		            $(this).css('background-color','#eeeeee');
+		            console.log("positions.topLeft: "+positions.topLeft);
+		        });
+
+
+		        $("#touch-top-right").click(function(){
+		            positions.topRight = {
+		                x : 2,
+		                y : 0,
+		                z : 0
+		            }
+		            $(this).css('background-color','#eeeeee');
+		            console.log("positions.topRight: "+positions.topRight);
+		        });
+
+		        $("#touch-bottom-left").click(function(){
+			        positions.bottomLeft = {
+		                x : 0,
+		                y : -1,
+		                z : 0
+		            }
+		            $(this).css('background-color','#eeeeee');
+		            console.log("positions.bottomLeft: "+positions.bottomLeft);
+		        });
+
+
+		        $("#touch-bottom-right").click(function(){
+		            positions.bottomRight = {
+		                x : 2,
+		                y : -1,
+		                z : 0
+		            }
+		            $(this).css('background-color','#eeeeee');
+		            console.log("positions.bottomRight: "+positions.bottomRight);
+		        });*/
 
 		        $("#create-plane1").click(function(){
 					$("#error").text("");
@@ -236,17 +274,19 @@
 				            height_post_it = Math.abs(positions1.topLeft.y - positions1.bottomLeft.y);
 				            width_post_it = Math.abs(positions1.topRight.x - positions1.topLeft.x);
 				            
-				            var date = new Date();
-				            
 				            // Sauvegarde dans la bdd
 				            $.ajax({
 				                type: 'POST',
-				                url: 'db/send_calib_post_it.php',
-				                data: 'height_post_it=' + height_post_it + '&width_post_it=' + width_post_it + '&date=' + date + '&value=oui',
+				                url: 'db/send_calib.php',
+				                data: 'height_post_it=' + height_post_it + '&width_post_it=' + width_post_it + '&value=oui',
 				                dataType: 'html', 
 				                success: function(data) {
-									$("#success").text("Calibration du bouton oui réalisée avec succès");
+									$("#success").text("Calibration du bouton 'oui' réalisée avec succès");
 									$("#error").text("");
+				                },
+				                error: function(data) {
+					                $("#success").text("");
+									$("#error").text(data);
 				                }
 				            });
 			            } else {
@@ -289,18 +329,19 @@
 				            height_post_it = Math.abs(positions1.topLeft.y - positions1.bottomLeft.y);
 				            width_post_it = Math.abs(positions1.topRight.x - positions1.topLeft.x);
 				            
-				            var date = new Date();
-				            
 				            // Sauvegarde dans la bdd
 				            $.ajax({
 				                type: 'POST',
-				                url: 'db/send_calib_post_it.php',
-				                data: 'height_post_it=' + height_post_it + '&width_post_it=' + width_post_it + '&date=' + date + '&value=non',
+				                url: 'db/send_calib.php',
+				                data: 'height_post_it=' + height_post_it + '&width_post_it=' + width_post_it + '&value=non',
 				                dataType: 'html', 
 				                success: function(data) {
-									$("#success").text("Calibration du bouton non réalisée avec succès");
+									$("#success").text("Calibration du bouton 'non' réalisée avec succès");
 									$("#error").text("");
-				
+								},
+				                error: function(data) {
+					                $("#success").text("");
+									$("#error").text(data);
 				                }
 				            });
 			            } else {

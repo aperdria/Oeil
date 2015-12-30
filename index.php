@@ -2,7 +2,9 @@
 <html lang="en">
 
 
-<?php include_once("head.php"); ?>
+<?php
+	include_once("head.php");
+?>
 
 <!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
 
@@ -44,6 +46,10 @@
                     <!-- A supprimer dans la version finale -->
                         <a class="page-scroll" href="config.php"><i>Calibrage</i></a>
                     </li>
+                    <li>
+                    <!-- A supprimer dans la version finale -->
+                        <a class="page-scroll" href="statistiques.php"><i>Statistiques</i></a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -74,7 +80,13 @@
             </div>
         </div>
     </section>
-
+    
+	<?php 
+		include_once("db/functions_db.php");
+		$bdd = connexion();
+		include_once "db/create_database.php";
+		create_database(false, false);
+	?>
 			
     <section id="scores" class="about-section">
         <div class="container">
@@ -83,15 +95,24 @@
                     <h1>Meilleurs scores</h1>
 						<!-- Initialize database and send statistics if someone has just played -->
 						<?php
-							include_once "db/create_database.php";
 							if(!empty($_POST)) {
-								include_once "db/send_stats.php";
-								echo '<h3 style="color:#87ba76">'.$_POST['pseudo'].', votre score est de '.$_POST['score_tactile'].' en tactile,  de '.$_POST['score_gestural'].' en gestuel.</h3>';
+								$pseudo = $_POST['pseudo'];
+								$hand = $_POST['hand'];
+								$stats_tactile = explode(";", $_POST['stats_tactile']);
+								$stats_gestural = explode(";", $_POST['stats_gestural']);
+								$game_id = send_stats ($bdd, $pseudo, $hand, $stats_tactile, $stats_gestural);
+								$score_tactile_player = get_score_tactile_from_gameid($bdd,$game_id);
+								$score_gestural_player = get_score_gestural_from_gameid($bdd,$game_id);
+								echo '<h3 style="color:#87ba76">'.$pseudo.', votre score est de '.$score_tactile_player.' en tactile,  de '.$score_gestural_player.' en gestuel.</h3>';
 							}
 						?>
 						
 						
                 <div class="col-lg-6 col-md-6">
+                <?php
+					$best_score_tactile = get_best_score_tactile($bdd);
+					$best_score_gestural = get_best_score_gestural($bdd);
+				?>
                 <h4>Scores en utilisant l'écran tactile</h4>
 						<table class="table table-striped">
 						<thead>
@@ -103,9 +124,13 @@
 							</tr>
 						</thead>
 						<tbody id="score_table">
-							<?php
-								include_once "db/get_score_tactile.php";
-							?>					
+						<?php 
+						$cpt=1;
+								foreach ($best_score_tactile as $score) {
+									echo '<tr><td>'.$cpt.'</td><td>'.$score[0].'</td><td>'.$score[1].'</td><td>'.(round($score[2]*0.001,2)).' seconde(s)</td></tr>';
+									$cpt++;
+								}
+							?>		
 						</tbody>
 						</table>
                 </div>
@@ -122,9 +147,13 @@
 							</tr>
 						</thead>
 						<tbody id="score_table">
-							<?php
-								include_once "db/get_score_gestural.php";
-							?>			
+							<?php 
+							$cpt=1;
+								foreach ($best_score_gestural as $score) {
+									echo '<tr><td>'.$cpt.'</td><td>'.$score[0].'</td><td>'.$score[1].'</td><td>'.(round($score[2]*0.001,2)).' seconde(s)</td></tr>';
+									$cpt++;
+								}
+							?>				
 						</tbody>
 						</table>
                 </div>

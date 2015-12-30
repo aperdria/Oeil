@@ -1,27 +1,17 @@
 <!-- Get the size of the button from the configuration -->
    <?php
-	try {
-		$db_handle = new PDO('sqlite:db/oeil.sqlite');
-		$db_handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		
-		$req = $db_handle->prepare("SELECT * FROM question");
-		$req->execute();
-		$questions = $req->fetchAll();
-		
-		$req = $db_handle->prepare("SELECT size FROM calibration_buttons ORDER BY date DESC LIMIT 1");
-		$req->execute();
-		$size_buttons = $req->fetch();
-		if($size_buttons[0] == "small") {
+	   include_once("db/functions_db.php");
+	   $bdd = connexion();
+	   $questions = get_questions($bdd);
+	   $size_buttons = get_buttons_size($bdd);
+		if($size_buttons == "small") {
 			$class = "btn-exercice-sm";
-		} else if($size_buttons[0] == "big") {
+		} else if($size_buttons == "big") {
 			$class = "btn-exercice-lg";
 		} else {
 			$class = "btn-exercice-md";
-		} 
-	} catch (Exception $e) {
-		die('Erreur : '.$e->getMessage());
-	}
-?>
+		}
+	?>
 <!-- EXERCICE -->
 <section id="about" class="about-section">
     <div class="container">
