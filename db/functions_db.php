@@ -182,4 +182,15 @@ function get_avg_score_by_post_it_size ($bdd) {
 	return($req->fetchAll());
 }
 
+function get_all_data ($bdd) {
+	$req = $bdd->prepare("
+	SELECT  g.id_game, it.id_question, it.delay_answer, g.date, cp.height_post_it, cp.width_post_it, it.score, it.mode, cb.size, p.hand, cp.id
+	FROM game g, iteration it, calibration_post_it cp, calibration_buttons cb, player p
+	WHERE it.id_game=g.id_game and g.calibration_post_it=cp.id and calibration_buttons=cb.id and g.pseudo_player=p.pseudo
+	");
+	$req->execute();
+	return($req->fetchAll());
+}
+
+
 ?>

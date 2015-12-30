@@ -2,7 +2,33 @@
 <html lang="en">
 
 
-<?php include_once("head.php"); ?>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Projet Oeil</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="./css/scrolling-nav.css" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="./css/flipclock.css">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
 
 <!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
 
@@ -18,6 +44,7 @@
 		$avg_score_by_buttons_size = get_avg_score_by_buttons_size($bdd);
 		$avg_delay_by_post_it_size = get_avg_delay_by_post_it_size($bdd);
 		$avg_score_by_post_it_size = get_avg_score_by_post_it_size($bdd);
+		$all_data = get_all_data($bdd);
 	?>
     
     <!-- Intro Section -->
@@ -26,6 +53,8 @@
             
             <div class="row">
             <div class="col-lg-12">
+				<h2 class="cover-heading">Statistiques</h2>
+                <a id="export" onclick="exportData()" xclass="btn btn-default page-scroll" href="">Exporter</a>
 				<div class="col-lg-6 col-md-6">
 					<h4>Moyenne des délais de réponses par taille de boutons</h4>
                     <div id="avg_delay_by_buttons_size" style="height: 250px;"></div>
@@ -68,6 +97,51 @@
     <script src="./js/three.js"></script>
 	<script src="./js/leap.min.js"></script>
 	<script type="text/javascript" src="./js/donnees_leap.js"></script>
+
+	<script type="text/javascript">
+	function exportData () {
+		var stockData = <?php echo json_encode($all_data); ?>;
+        var csv = convertArrayOfObjectsToCSV({data: stockData});
+        csv = 'data:text/csv;charset=utf-8,' + csv;
+		var encodedUri = encodeURI(csv);
+		
+		var expt = document.getElementById("export");
+		expt.setAttribute("href", encodedUri);
+		expt.setAttribute("download", "data.csv");
+		expt.click();
+	}
+	
+	function convertArrayOfObjectsToCSV(args) {  
+	        var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+	
+	        data = args.data || null;
+	        if (data == null || !data.length) {
+	            return null;
+	        }
+	
+	        columnDelimiter = args.columnDelimiter || ';';
+	        lineDelimiter = args.lineDelimiter || '\n';
+	
+	        keys = Object.keys(data[0]);
+	
+	        result = '';
+	        result += keys.join(columnDelimiter);
+	        result += lineDelimiter;
+	
+	        data.forEach(function(item) {
+	            ctr = 0;
+	            keys.forEach(function(key) {
+	                if (ctr > 0) result += columnDelimiter;
+	
+	                result += item[key];
+	                ctr++;
+	            });
+	            result += lineDelimiter;
+	        });
+	
+	        return result;
+	    }
+	</script>
 
 	<script type="text/javascript">
 		Morris.Bar({
