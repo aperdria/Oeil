@@ -15,10 +15,8 @@
     <link href="./css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="./css/scrolling-nav.css" rel="stylesheet">
-	<link rel="stylesheet" href="./css/style.css">
+    <link  rel="stylesheet" href="./css/scrolling-nav.css">
 	<link rel="stylesheet" href="./css/flipclock.css">
-    <link href="css/style.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

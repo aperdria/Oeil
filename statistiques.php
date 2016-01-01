@@ -16,10 +16,11 @@
     <link href="./css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="./css/scrolling-nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/scrolling-nav.css">
 	<link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" href="./css/flipclock.css">
-    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" >
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css"
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -48,13 +49,17 @@
 	?>
     
     <!-- Intro Section -->
-    <section id="about" class="page-section">
+    <section id="about" class="stats-section">
         <div class="container">
             
-            <div class="row">
+            <div class="row stats">
             <div class="col-lg-12">
 				<h2 class="cover-heading">Statistiques</h2>
-                <a id="export" onclick="exportData()" xclass="btn btn-default page-scroll" href="">Exporter</a>
+                
+            <div class="col-lg-12">
+                <a id="export" onclick="exportData()" class="btn btn-default page-scroll" href="#">Exporter</a>
+                <a class="btn btn-default page-scroll" href="statistiques.php?erase=true">Réinitialiser la base</a>
+                </div>
 				<div class="col-lg-6 col-md-6">
 					<h4>Moyenne des délais de réponses par taille de boutons</h4>
                     <div id="avg_delay_by_buttons_size" style="height: 250px;"></div>
@@ -77,9 +82,21 @@
             </div>
         </div>
     </section>
+    
+    <?php
+    	function eraseData() {
+			include_once "db/create_database.php";
+			create_database(true, true);
+    	}
+    	
+    	if(isset($_GET['erase'])) {
+	    	eraseData();
+    	}
+    ?>
    
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
+    <script src="js/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
@@ -92,11 +109,6 @@
     <script src="js/raphael-min.js"></script>
     <script src="js/morris.min.js"></script>
     <script src="js/morris-data.js"></script>
-
-    <!-- Leap Motion -->
-    <script src="./js/three.js"></script>
-	<script src="./js/leap.min.js"></script>
-	<script type="text/javascript" src="./js/donnees_leap.js"></script>
 
 	<script type="text/javascript">
 	function exportData () {
@@ -157,7 +169,7 @@
 		  ],
 		  xkey: 'y',
 		  ykeys: ['a'],
-		  labels: ['Délai de réponse']
+		  labels: ['Délai moyen']
 		});
 		
 		Morris.Bar({
@@ -174,7 +186,9 @@
 		  ],
 		  xkey: 'y',
 		  ykeys: ['a'],
-		  labels: ['Délai de réponse']
+		  labels: ['Délai moyen'],
+		  gridTextColor: '#47B3BC',
+		  barColors: ['#47B3BC']
 		});
 		
 				Morris.Bar({
@@ -190,7 +204,9 @@
 		  ],
 		  xkey: 'y',
 		  ykeys: ['a'],
-		  labels: ['Score']
+		  labels: ['Score moyen'],
+		  gridTextColor: '#A63B36',
+		  barColors: ['#A63B36']
 		});
 		
 		Morris.Bar({
@@ -207,11 +223,10 @@
 		  ],
 		  xkey: 'y',
 		  ykeys: ['a'],
-		  labels: ['Score']
+		  labels: ['Score moyen'],
+		  gridTextColor: '#BC5C4A',
+		  barColors: ['#BC5C4A']
 		});
-	</script>
-
-	<script type="text/javascript">
 	
 		
 		new Morris.Line({

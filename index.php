@@ -65,14 +65,13 @@
                 <div class="col-lg-8">
                     <h1 id="main-title">Projet Oeil</h1>
 
-                    
                     <div class="col-lg-3"></div>
                     <h2>Optimisation des Espaces Identifiés Libres</h2>
                 </br>
                     <p class="lead">Participez à une expérience innovante autour des nouveaux modes d'interactions Homme-Machine.</p></br>
-                    <a class="btn btn-default btn-begin page-scroll" href="etape1.php"><h4>Commencer l'expérience</h4></a></br></br>
-                    <a class="btn btn-default page-scroll" href="#scores">Voir les scores</a>
-                    <a class="btn btn-default page-scroll" href="#infos">Obtenir plus d'infos</a></br></br> 
+                    <a class="btn btn-default btn-begin page-scroll" href="etape1.php"><h4 id="begin">Commencer l'expérience</h4></a></br></br>
+                    <a class="btn btn-primary page-scroll" href="#scores">Voir les scores</a>
+                    <a class="btn btn-info page-scroll" href="#infos">Obtenir plus d'infos</a></br></br> 
                 </div>
                 <div class="col-lg-2"></div>
                 
@@ -88,7 +87,7 @@
 		create_database(false, false);
 	?>
 			
-    <section id="scores" class="about-section">
+    <section id="scores" class="score-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -98,21 +97,25 @@
 							if(!empty($_POST)) {
 								$pseudo = $_POST['pseudo'];
 								$hand = $_POST['hand'];
-								$stats_tactile = explode(";", $_POST['stats_tactile']);
-								$stats_gestural = explode(";", $_POST['stats_gestural']);
-								$game_id = send_stats ($bdd, $pseudo, $hand, $stats_tactile, $stats_gestural);
+								$game_id = $_POST['game_id'];
 								$score_tactile_player = get_score_tactile_from_gameid($bdd,$game_id);
 								$score_gestural_player = get_score_gestural_from_gameid($bdd,$game_id);
-								echo '<h3 style="color:#87ba76">'.$pseudo.', votre score est de '.$score_tactile_player.' en tactile,  de '.$score_gestural_player.' en gestuel.</h3>';
+								$nb_questions_tactile = get_nb_question_from_game_id($bdd,$game_id,0);
+								$nb_questions_gestural = get_nb_question_from_game_id($bdd,$game_id,1);
+								echo '<h3 style="color:#87ba76">'.$pseudo.', votre score est de '.$score_tactile_player.'/'.$nb_questions_tactile.' en tactile,  de '.$score_gestural_player.'/'.$nb_questions_gestural.' en gestuel.</h3>';
 							}
-						?>
-						
-						
+								$best_score_tactile = get_best_score_tactile($bdd);
+								$best_score_gestural = get_best_score_gestural($bdd);
+								$fastest = get_fastest_player($bdd);
+								$best = get_best_player($bdd);
+							?>
+				
+                <div class="col-lg-10 col-lg-offset-1 best">
+				<p class="fun">Le meilleur score : <name class="named"><?php echo $fastest['pseudo'].'</name> avec '.$best['score'].' réponses justes'?></p>
+				<p class="fun">Le joueur le plus rapide : <name><?php echo $fastest['pseudo'].' avec '.(round($fastest['delay']*0.001,2)).'</name> secondes entre chaque réponse en moyenne'?></p>
+				</div>
+				
                 <div class="col-lg-6 col-md-6">
-                <?php
-					$best_score_tactile = get_best_score_tactile($bdd);
-					$best_score_gestural = get_best_score_gestural($bdd);
-				?>
                 <h4>Scores en utilisant l'écran tactile</h4>
 						<table class="table table-striped">
 						<thead>
@@ -167,44 +170,42 @@
     <section id="infos" class="services-section">
         <div class="container">
             <div class="row">
-                <div class="col-lg-1"></div>
-                <div class="col-lg-10">
+                <div class="col-lg-10 col-lg-offset-1">
                     <h2>Optimisation des Espaces Identifiés Libres</h2>
-                    <p>Ce projet s’inscrit dans le cadre d’un partenariat entre l’Université de Technologie de Compiègne et Thales Communications & Security. En effet, Thales a lancé en 2015 une phase d’étude amont, le projet VIVEA (Véhicules Info-Valorisés à Ergonomie Avancée), dont le but est de déterminer les solutions technologiques innovantes permettant de répondre aux besoins opérationnels de l’Armée de Terre. Ces nouvelles solutions doivent permettre à l’armée d’accroître la protection de ses soldats, d’accélérer les processus décisionnels, et d’améliorer la préparation opérationnelle de ses missions. Ainsi, le projet s’articule autour de trois grands axes :</br></br>
-                    Évaluation du gain opérationnel, de la maturité et la pertinence des technologies innovantes</br>
-                    Évaluation d’une nouvelle organisation des postes d’équipages des futurs véhicules de l’armée de terre</br>
-                    Évaluation dans un contexte opérationnel des différentes innovations afin de mesurer le gain réel de leurs utilisations</br></br>
-                    L’objectif principal de ce projet est de réaliser une preuve de concept autour des nouveaux modes d’interactions Homme-Machine de type contrôle gestuel dans un véhicule de type blindé. En effet, de nombreuses informations capitales sont transmises aux opérateurs et aux décisionnaires par le biais d’écrans de contrôle tactiles à l’intérieur de ces véhicules. Or, de part la nature de l’environnement (environnement confiné, mobile et bruyant), il est parfois difficile d’interagir avec ce type d’interface une fois sur le terrain. L’objectif de ce projet serait donc d’exploiter les nombreux espaces disponibles à l’intérieur de ces véhicules blindés, afin de les transformer en interface de commande, qui pourraient être utilisées pour faciliter les interactions
-des opérateurs sur le terrain.</p>
+                    <p>Ce projet s’inscrit dans le cadre d’un partenariat entre l’Université de Technologie de Compiègne et Thales Communications & Security.</p>
+                    <p>Thales a lancé en 2015 le projet <big>VIVEA</big> (Véhicules Info-Valorisés à Ergonomie Avancée), une phase études-amont dont le but est de déterminer les solutions technologiques innovantes permettant de répondre aux besoins opérationnels de l’Armée de Terre.</p>
+                    <p>L’objectif principal de ce projet est de réaliser une <big>preuve de concept</big> autour des <big>nouveaux modes d’interactions Homme-Machine de type contrôle gestuel dans un véhicule de type blindé</big>. En effet, de nombreuses informations capitales sont transmises aux opérateurs et aux décisionnaires par le biais d’écrans de contrôle tactiles à l’intérieur de ces véhicules. Or, de part la <big>nature de l’environnement</big> (environnement confiné, mobile et bruyant), il est parfois difficile d’interagir avec ce type d’interface une fois sur le terrain. L’objectif de ce projet serait donc d’<big>exploiter les nombreux espaces disponibles</big> à l’intérieur de ces véhicules blindés, afin de les transformer en interface de commande, qui pourraient être utilisées pour faciliter les interactions des opérateurs sur le terrain.</p>
+					<img src="./img/blinde.png"></img>
                     <a class="btn btn-default page-scroll" href="#contact">Nous contacter</a>
                 </div>
-                <div class="col-lg-1"></div>
             </div>
         </div>
     </section>
     
         <!-- Services Section -->
-    <section id="contact" class="about-section">
+    <section id="contact" class="contact-section">
         <div class="container">
 			<div class="row">
                 <div class="col-lg-12">
-                    <h1>Contact</h1>
-                    <h4></h4>
-                    <h4></h4>
+                    <h1 style="padding-bottom:20px">Contact</h1>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-5 section">
                      <img src="./img/thales.png" alt="" class="img-responsive center-block" style="width:50%">
                     <h3>Porteur de projet</h3>
-                    <h4>Thales</h4>
-                    <p>Thales Communication & Security</p>
-                    <p>Marc Dehondt</p>
+                    <h5>Thales Communication & Security</h5>
+                    <p><big>Marc Dehondt</big></p>
+                    <p style="font-style:italic;">Responsable Etudes Amont - Système Tactique Terrestre</p>
+                    <p style="color:#2136A2; text-decoration:underline">marc.dehondt@thalesgroup.com</p>
                 </div>
-                <div class="col-lg-6">
-	                     <img src="./img/utc.png" alt="" class="img-responsive center-block" style="width:50%">
+                <div class="col-lg-5 section">
+	                <img src="./img/utc.png" alt="" class="img-responsive center-block" style="width:50%">
                     <h3>Réalisation</h3>
-                    <h4>UTC</h4>
-                    <p>Amélie Perdriaud</p>
-                    <p>Nicolas Lhomme</p>
+                    <p><i>Etudiants en dernière année</br> à l'Université de Technologie de Compiègne</i></p>
+                    <big>Nicolas Lhomme</big>
+                    <p style="color:#2136A2; text-decoration:underline">nicolas.lhomme.fr@gmail.com</p>
+                    <big>Amélie Perdriaud</big>
+                    <p style="color:#2136A2; text-decoration:underline">amelieperdriaud@gmail.com</p>
                 </div>
                 
             </div>
