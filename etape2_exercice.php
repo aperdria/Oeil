@@ -17,9 +17,11 @@
 	<!-- This form is used to send values to the next page, we send the pseudo, the hand and the statistics (id_question, score, delay_to_answer) contained in an array -->
 	<form action="index.php#scores" method="post">
 		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
+		<input type="hidden" name="game_id" id="game_id" value="<?php echo $_POST['game_id'] ?>">
+		<!--<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
 		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
 		<input type="hidden" name="stats_tactile" id="stats_tactile" value="<?php echo $_POST['stats_tactile'] ?>">
-		<input type="hidden" name="stats_gestural" id="stats_gestural" value="<?php echo $_POST['stats_gestural'] ?>">
+		<input type="hidden" name="stats_gestural" id="stats_gestural" value="<?php echo $_POST['stats_gestural'] ?>">-->
 	</form>
    
     <!-- jQuery -->
@@ -67,6 +69,10 @@
     <script type="text/javascript">
     
     var stats_gestural = [];
+		
+    var pseudo = '<?php echo $_POST['pseudo']  ?>';  
+    var hand = '<?php echo $_POST['hand'] ?>';  
+    var stats_tactile = <?php echo json_encode($_POST['stats_tactile']); ?>;  
 	
 	// To display questions
     var questions = <?php echo json_encode($questions); ?>;  
@@ -87,7 +93,7 @@
     // Display the first question
     i = Math.floor(Math.random()*questions.length);
 	document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
-	document.getElementById("score").innerHTML = '0/'+cpt;
+	document.getElementById("score").innerHTML = 'Votre score actuel : '+score_gestural+'/'+(cpt+1);
 
 	// Start the timer
 	clock();
@@ -114,8 +120,12 @@
     	if(questions[i]['answer'] == "true") {
     		score_gestural++;
     		score=1;
+			document.getElementById("correction").innerHTML = 'Vrai !';
+			document.getElementById("correction").style.color = "green";
     	} else {
 	    	score=0;
+			document.getElementById("correction").innerHTML = 'Faux !';
+			document.getElementById("correction").style.color = "red";
     	}
     	
     	// Count the iteration in statistics
@@ -130,7 +140,8 @@
 			i = Math.floor(Math.random()*questions.length);
 			
 	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
-		document.getElementById("score").innerHTML = score_gestural+'/'+(cpt+1);
+		document.getElementById("score").innerHTML = 'Votre score actuel : '+score_gestural+'/'+(cpt+1);
+
 		cpt++;
     }
     
@@ -145,8 +156,12 @@
     	if(questions[i]['answer'] == "false") {
     		score_gestural++;
     		score=1;
+			document.getElementById("correction").innerHTML = 'Vrai !';
+			document.getElementById("correction").style.color = "green";
     	} else {
 	    	score=0;
+			document.getElementById("correction").innerHTML = 'Faux !';
+			document.getElementById("correction").style.color = "red";
     	}
     	
     	// Count the iteration in statistics
@@ -162,22 +177,35 @@
 			i = Math.floor(Math.random()*questions.length);
 			
 	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
-		document.getElementById("score").innerHTML = score_gestural+'/'+(cpt+1);
+		document.getElementById("score").innerHTML = 'Votre score actuel : '+score_gestural+'/'+(cpt+1);
+
 		cpt++;
     }
 		
 	function clock() {
-		clock = $('.clock').FlipClock(10, {
+		clock = $('.clock').FlipClock(5, {
 	        clockFace: 'MinuteCounter',
 	        countdown: true,
 	        callbacks: {
 	        	stop: function() {
 		        	if(cpt==0) {
-			        	document.location.href="index.php"
+			        	document.location.href="index.php";
 		        	} else {
-						var element = document.getElementById("stats_gestural");
-						element.value = stats_gestural.join(';');
-						element.form.submit();
+				        $.ajax({
+			                type: 'POST',
+			                url: 'db/send_stats.php',
+			                data: 'pseudo='+pseudo+'&hand='+hand+'&stats_tactile='+stats_tactile+'&stats_gestural='+stats_gestural.join(';'),
+			                dataType: 'html', 
+			                success: function(data) {
+								var element = document.getElementById("game_id");
+								element.value = data;
+								element.form.submit();
+			                },
+			                error: function(data) {
+				                alert("Erreur dans l'enregistrement de votre score.");
+				                document.location.href="index.php";
+			                }
+			            });
 					}
 	        	}
 	        }

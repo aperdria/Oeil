@@ -75,8 +75,12 @@
     	if(questions[i]['answer'] == "true") {
     		score_tactile++;
     		score=1;
+			document.getElementById("correction").innerHTML = 'Vrai !';
+			document.getElementById("correction").style.color = "green";
     	} else {
 	    	score=0;
+			document.getElementById("correction").innerHTML = 'Faux !';
+			document.getElementById("correction").style.color = "red";
     	}
     	
     	// Count the iteration in statistics
@@ -92,7 +96,7 @@
 			i = Math.floor(Math.random()*questions.length);
 			
 	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
-		document.getElementById("score").innerHTML = score_tactile+'/'+(cpt+1);
+	    document.getElementById("score").innerHTML = 'Votre score actuel : '+score_tactile+'/'+(cpt+1);
 		cpt++;
     }
     
@@ -107,8 +111,12 @@
     	if(questions[i]['answer'] == "false") {
     		score_tactile++;
     		score=1;
+			document.getElementById("correction").innerHTML = 'Vrai !';
+			document.getElementById("correction").style.color = "green";
     	} else {
 	    	score=0;
+			document.getElementById("correction").innerHTML = 'Faux !';
+			document.getElementById("correction").style.color = "red";
     	}
     	
     	// Count the iteration in statistics
@@ -124,12 +132,12 @@
 			i = Math.floor(Math.random()*questions.length);
 			
 	    document.getElementById("exercice").innerHTML = '<h3>'+questions[i]['question']+'</h3><div id="'+questions[i]['shape']+'"></div>';
-		document.getElementById("score").innerHTML = score_tactile+'/'+(cpt+1);
+		document.getElementById("score").innerHTML = 'Votre score actuel : '+score_tactile+'/'+(cpt+1);
 		cpt++;
     }
 		
 	function clock() {
-		clock = $('.clock').FlipClock(10, {
+		clock = $('.clock').FlipClock(5, {
 	        clockFace: 'MinuteCounter',
 	        countdown: true,
 	        callbacks: {

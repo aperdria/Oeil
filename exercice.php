@@ -13,25 +13,29 @@
 		}
 	?>
 <!-- EXERCICE -->
-<section id="about" class="about-section">
+<section id="about" class="exercice-section">
     <div class="container">
-        <div class="row" id="card">
+        <div class="row">
 			<div class="col-md-12">
-				<div id="score"></div></br></br>
 				<!-- Timer -->
 				<div class="col-md-12">
 					<div class="col-md-4"></div>
 					<div class="col-md-4"><div class="flip-clock-wrapper clock"></div></div>
 					<div class="col-md-4"></div>
 				</div>
-				</br>
-				<!-- Buttons Yes and No -->
-				<div id="buttons">
-					<a href="#" onclick="next_yes()" id="button_yes" class="btn <?php echo $class ?> btn-default">Oui</a>
-					<a href="#" onclick="next_no()" id="button_no" class="btn  <?php echo $class ?> btn-default">Non</a>
+				
+				<div class="col-md-12">
+					<div id="correction"></div>
+					<div id="score"></div>
 				</div>
 				<!-- Question -->
-				<div class="col-md-12"><div id="exercice"></div></div>
+				<div class="col-md-8 col-md-offset-2" id="exercice-card">
+					<div id="exercice"></div>
+					<div id="buttons">
+						<a href="#" onclick="next_yes()" id="button_yes" class="btn <?php echo $class ?> btn-default">Oui</a>
+						<a href="#" onclick="next_no()" id="button_no" class="btn  <?php echo $class ?> btn-default">Non</a>
+					</div>
+				</div>
 			 </div>
         </div>
     </div>
