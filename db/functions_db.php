@@ -10,6 +10,28 @@ function connexion () {
 	}
 }
 
+function is_calibrage_post_it_done ($bdd) {
+	$req = $bdd->prepare("SELECT * FROM calibration_post_it");
+	$req->execute();
+	$res = $req->fetchAll();
+	echo count($res);
+	if(count($res)>=2)
+		return true;
+	else
+		return false;
+}
+
+function is_calibrage_buttons_done ($bdd) {
+	$req = $bdd->prepare("SELECT * FROM calibration_buttons");
+	$req->execute();
+	$res = $req->fetchAll();
+	echo count($res);
+	if($res)
+		return true;
+	else
+		return false;
+}
+
 function get_best_score_tactile ($bdd) {
 	$req = $bdd->prepare("
 			SELECT *
@@ -84,12 +106,22 @@ function get_score_tactile_from_gameid ($bdd, $game_id) {
 	return ($res[0]);
 }
 
+
+
 function get_score_gestural_from_gameid ($bdd, $game_id) {
 	$req = $bdd->prepare("SELECT SUM(score) FROM iteration where id_game=:id_game AND mode=:mode;");
 	$req->execute(array('id_game'=>$game_id, 'mode'=>1));
 	$res = $req->fetch();
 	return ($res[0]);
 }
+
+function get_nb_question_from_game_id ($bdd, $game_id, $mode) {
+	$req = $bdd->prepare("SELECT COUNT(*) FROM iteration where id_game=:id_game AND mode=:mode;");
+	$req->execute(array('id_game'=>$game_id, 'mode'=>$mode));
+	$res = $req->fetch();
+	return ($res[0]);	
+}
+
 
 function send_calib_post_it ($bdd,$width_post_it,$height_post_it,$value) {
 	$req = $bdd->prepare('INSERT INTO calibration_post_it (height_post_it, width_post_it, value_post_it) VALUES (:height_post_it, :width_post_it, :value);');
@@ -192,5 +224,36 @@ function get_all_data ($bdd) {
 	return($req->fetchAll());
 }
 
+
+function get_best_player ($bdd) {
+	$req = $bdd->prepare("SELECT *
+							FROM
+							(SELECT p.pseudo, sum(it.score) as score, avg(delay_answer) as delay, g.id_game
+							FROM iteration it, game g, player p
+							WHERE g.id_game = it.id_game and g.pseudo_player = p.pseudo
+							GROUP BY  g.id_game, it.mode
+							ORDER BY score ASC)
+							GROUP BY pseudo
+							ORDER BY score DESC
+							LIMIT 1;");
+	$req->execute();
+	$result = $req->fetch();
+	return($result);
+}
+
+function get_fastest_player ($bdd) {
+	$req = $bdd->prepare("SELECT *
+					FROM
+					(SELECT p.pseudo, sum(it.score) as score, avg(delay_answer) as delay, g.id_game
+					FROM iteration it, game g, player p
+					WHERE g.id_game = it.id_game and g.pseudo_player = p.pseudo
+					GROUP BY  g.id_game, it.mode
+					ORDER BY delay DESC)
+					GROUP BY pseudo
+					LIMIT 1;");
+	$req->execute();
+	$result = $req->fetch();
+	return($result);
+}
 
 ?>
