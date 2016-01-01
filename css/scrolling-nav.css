@@ -1,9 +1,3 @@
-/*!
- * Start Bootstrap - Scrolling Nav HTML Template (http://startbootstrap.com)
- * Code licensed under the Apache License v2.0.
- * For details, see http://www.apache.org/licenses/LICENSE-2.0.
- */
-
 body {
     width: 100%;
     height: 100%;
@@ -26,11 +20,6 @@ html {
         padding: 0;
     }
 }
-
-/* Demo Sections - You can use these as guides or delete them - the scroller will work with any sort of height, fixed, undefined, or percentage based.
-The padding is very important to make sure the scrollspy picks up the right area when scrolled to. Adjust the margin and padding of sections and children 
-of those sections to manage the look and feel of the site. */
-
 .intro-section {
     min-height: 100%;
     padding-top: 150px;
@@ -48,6 +37,44 @@ of those sections to manage the look and feel of the site. */
     background: #eee;
 	background-image: url("../img/cubes.png");
 }
+.exercice-section {
+    min-height: 100%;
+    padding-top: 150px;
+    text-align: center;
+    background: #eee;
+	background-image: url("../img/cubes.png");
+}
+#correction {
+	margin:20px;
+	height: 40px;
+	font-size: 28px;
+}
+#score {
+	margin:20px;
+	height: 20px;
+}
+.stats-section {
+    min-height: 150%;
+    padding-top: 100px;
+    text-align: center;
+    background: #eee;
+	background-image: url("../img/cubes.png");
+}
+
+.score-section {
+    min-height: 100%;
+    padding-top: 50px;
+    text-align: center;
+    background: #eee;
+	background-image: url("../img/cubes.png");
+}
+.score-section .best {
+	background-color: white;
+	padding: 20px;
+	border-color: blue;
+	border-width: 10px;
+	margin-bottom: 20px;
+}
 
 .page-section {
     min-height: 100%;
@@ -59,7 +86,7 @@ of those sections to manage the look and feel of the site. */
 
 .services-section {
     min-height: 100%;
-    padding-top: 150px;
+    padding-top: 50px;
     text-align: center;
     background: #fff;
 }
@@ -68,5 +95,209 @@ of those sections to manage the look and feel of the site. */
     min-height: 100%;
     padding-top: 150px;
     text-align: center;
-    background: #eee;
+	background-image: url("../img/cubes.png");
+}
+
+.contact-section .section {
+	min-height: 340px;
+	margin-left: 10px;
+	background-color: white;
+	padding: 30px;
+}
+body {
+  height: 100%;
+  text-align: center;
+  background-color: #e7e7e7;
+}
+big {
+	font-size: 16px;
+	font-weight: bold;
+}
+.fun {
+	font-size: 22px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+/* Padding for spacing */
+.inner {
+  padding: 30px;
+}
+.btn-begin {
+	background-color: #87ba76;
+	border-color: #87ba76;
+}
+.btn-begin:hover {
+	background-color: #5c8050;
+	border-color: #5c8050;
+}
+.stats {
+	margin-bottom: 50px;
+}
+#card {
+	background-color: #fff;
+	padding-bottom: 100px;
+	padding-top: 100px;
+}
+#exercice-card {
+	padding-bottom: 10px;
+	padding-top: 10px;
+	background-color: white;
+	height: 300px;
+}
+#main-title {
+	font-family: 'Black Ops', 'sans serif';
+	font-size: 48px;
+}
+#begin {
+	font-color: white;
+	font-size: 24px;
+}
+#buttons {
+	font-color: white;
+	font-size: 20px;
+}
+@font-face {
+  font-family: 'Black Ops';
+  src: url('../fonts/BlackOpsOne-Regular.ttf');
+}
+#transparent {
+width: 200px;
+height: 100px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+background: transparent;
+}
+#rectangle-blue {
+width: 200px;
+height: 100px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+background: blue;
+}
+#rectangle-green {
+width: 200px;
+height: 100px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+background: green;
+}
+#rectangle-red {
+width: 200px;
+height: 100px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+background: red;
+}
+
+#circle-blue {
+width: 100px;
+height: 100px;
+background: blue;
+-moz-border-radius: 50px;
+-webkit-border-radius: 50px;
+border-radius: 50px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+}
+#circle-green {
+width: 100px;
+height: 100px;
+background: green;
+-moz-border-radius: 50px;
+-webkit-border-radius: 50px;
+border-radius: 50px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+}
+#circle-red {
+width: 100px;
+height: 100px;
+background: red;
+-moz-border-radius: 50px;
+-webkit-border-radius: 50px;
+border-radius: 50px;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+}
+
+#triangle-up-blue {
+width: 0;
+height: 0;
+border-left: 50px solid transparent;
+border-right: 50px solid transparent;
+border-bottom: 100px solid blue;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+}
+#triangle-up-green {
+width: 0;
+height: 0;
+border-left: 50px solid transparent;
+border-right: 50px solid transparent;
+border-bottom: 100px solid green;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+}
+#triangle-up-red {
+width: 0;
+height: 0;
+border-left: 50px solid transparent;
+border-right: 50px solid transparent;
+border-bottom: 100px solid red;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 20px;
+}
+#myCanvas{
+    border: 2px;
+    border-color: black;
+    border-style: solid;
+    position: relative;
+    right:0;
+    margin-right: 20px;
+}
+#myCanvas2{
+    border: 2px;
+    border-color: black;
+    border-style: solid;
+    position: relative;
+    right:0;
+    margin-right: 20px;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+.btn-exercice-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.btn-exercice-md {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.btn-exercice-lg {
+  padding: 30px 50px;
+  font-size: 20px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.selected {
+	background-color: #cccccc;
 }
