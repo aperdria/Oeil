@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-<?php include_once("head.php"); ?>
-
-<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+<?php
+	// Check if calibrage has been done, otherwise redirects to config
+	include_once("db/functions_db.php");
+	$bdd = connexion();
+	$calibrage_post_it_is_done = is_calibrage_post_it_done($bdd);
+	$calibrage_buttons_is_done = is_calibrage_buttons_done($bdd);
+	
+	if($calibrage_buttons_is_done && $calibrage_post_it_is_done)
+		include_once("head.php");
+	else
+		echo '<head><meta http-equiv="refresh" content="0;URL=config.php"></head>';
+?>
 
 <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
 
