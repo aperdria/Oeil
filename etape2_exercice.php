@@ -183,7 +183,7 @@
     }
 		
 	function clock() {
-		clock = $('.clock').FlipClock(5, {
+		clock = $('.clock').FlipClock(30, {
 	        clockFace: 'MinuteCounter',
 	        countdown: true,
 	        callbacks: {
