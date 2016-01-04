@@ -18,10 +18,7 @@
         <div class="row">
 			<div class="col-md-12">
 				<!-- Timer -->
-				<div class="col-md-12">
-					<div class="col-md-4"></div>
-					<div class="col-md-4"><div class="flip-clock-wrapper clock"></div></div>
-					<div class="col-md-4"></div>
+				<div class="col-md-12"><div class="flip-clock-wrapper clock"></div>
 				</div>
 				
 				<div class="col-md-12">
