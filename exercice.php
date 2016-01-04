@@ -31,10 +31,16 @@
 				<!-- Question -->
 				<div class="col-md-8 col-md-offset-2" id="exercice-card">
 					<div id="exercice"></div>
+					
+				
 					<div id="buttons">
-						<a href="#" onclick="next_yes()" id="button_yes" class="btn <?php echo $class ?> btn-default">Oui</a>
-						<a href="#" onclick="next_no()" id="button_no" class="btn  <?php echo $class ?> btn-default">Non</a>
+					<div class="col-md-12">
+						<div class="col-md-5"><a href="#" onclick="next_yes()" id="button_yes" class="btn <?php echo $class ?> btn-default">Oui</a></div>
+						<div class="col-md-2"></div>
+						<div class="col-md-5"><a href="#" onclick="next_no()" id="button_no" class="btn  <?php echo $class ?> btn-default">Non</a></div>
 					</div>
+					</div>
+				</div>
 				</div>
 			 </div>
         </div>
