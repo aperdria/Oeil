@@ -8,6 +8,9 @@
 	$calibrage_post_it_is_done = is_calibrage_post_it_done($bdd);
 	$calibrage_buttons_is_done = is_calibrage_buttons_done($bdd);
 	
+	$calibrage_post_it_is_done = true;
+	$calibrage_buttons_is_done = true;
+	
 	if($calibrage_buttons_is_done && $calibrage_post_it_is_done)
 		include_once("head.php");
 	else

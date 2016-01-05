@@ -18,6 +18,7 @@
 	<form action="index.php#scores" method="post">
 		<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
 		<input type="hidden" name="game_id" id="game_id" value="<?php echo $_POST['game_id'] ?>">
+		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
 		<!--<input type="hidden" name="pseudo" id="pseudo" value="<?php echo $_POST['pseudo'] ?>">
 		<input type="hidden" name="hand" id="hand" value="<?php echo $_POST['hand'] ?>">
 		<input type="hidden" name="stats_tactile" id="stats_tactile" value="<?php echo $_POST['stats_tactile'] ?>">

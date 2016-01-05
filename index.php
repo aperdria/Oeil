@@ -94,10 +94,10 @@
                     <h1>Meilleurs scores</h1>
 						<!-- Initialize database and send statistics if someone has just played -->
 						<?php
-							if(!empty($_POST)) {
-								$pseudo = $_POST['pseudo'];
-								$hand = $_POST['hand'];
-								$game_id = $_POST['game_id'];
+							if(!empty($_POST) && isset($_POST)) {
+								$pseudo = $_POST["pseudo"];
+								$hand = $_POST["hand"];
+								$game_id = $_POST["game_id"];
 								$score_tactile_player = get_score_tactile_from_gameid($bdd,$game_id);
 								$score_gestural_player = get_score_gestural_from_gameid($bdd,$game_id);
 								$nb_questions_tactile = get_nb_question_from_game_id($bdd,$game_id,0);
@@ -111,7 +111,7 @@
 							?>
 				
                 <div class="col-lg-10 col-lg-offset-1 best">
-				<p class="fun">Le meilleur score : <name class="named"><?php echo $fastest['pseudo'].'</name> avec '.$best['score'].' réponses justes'?></p>
+				<p class="fun">Le meilleur score : <name class="named"><?php echo $best['pseudo'].'</name> avec '.$best['score'].' réponses justes'?></p>
 				<p class="fun">Le joueur le plus rapide : <name><?php echo $fastest['pseudo'].' avec '.(round($fastest['delay']*0.001,2)).'</name> secondes entre chaque réponse en moyenne'?></p>
 				</div>
 				

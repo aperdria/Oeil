@@ -131,11 +131,11 @@ function maxAxe(positionsPoints,axe)
 //Création du plan grâce à la librairie Three.js
 function createPlane(plane,positions)
 {
-	console.log("Creation du plan - Positions des angles du rectangle");
-	console.log("TopLeft : x = "+positions.topLeft.x+", y = "+positions.topLeft.y+", z = "+positions.topLeft.z);
-	console.log("TopRight : x = "+positions.topRight.x+", y = "+positions.topRight.y+", z = "+positions.topRight.z);
-	console.log("BottomLeft : x = "+positions.bottomLeft.x+", y = "+positions.bottomLeft.y+", z = "+positions.bottomLeft.z);
-	console.log("BottomRight : x = "+positions.bottomRight.x+", y = "+positions.bottomRight.y+", z = "+positions.bottomRight.z);
+//	console.log("Creation du plan - Positions des angles du rectangle");
+	//console.log("TopLeft : x = "+positions.topLeft.x+", y = "+positions.topLeft.y+", z = "+positions.topLeft.z);
+	//console.log("TopRight : x = "+positions.topRight.x+", y = "+positions.topRight.y+", z = "+positions.topRight.z);
+	//console.log("BottomLeft : x = "+positions.bottomLeft.x+", y = "+positions.bottomLeft.y+", z = "+positions.bottomLeft.z);
+//	console.log("BottomRight : x = "+positions.bottomRight.x+", y = "+positions.bottomRight.y+", z = "+positions.bottomRight.z);
 	
     var vectorCoords1 = {
         x: positions.topRight.x - positions.topLeft.x,
@@ -201,7 +201,7 @@ Leap.loop(controllerOptions, function(frame)
 				{
 					if(insertectInRectangle(positions1,frame.pointables[i]))
 					{
-						console.log("if 1");
+						//console.log("if 1");
 						isTouchingPlane1=true;
 						isTouchingPlane2=false;
 						fingerTouchingRectangle = i;
@@ -210,7 +210,7 @@ Leap.loop(controllerOptions, function(frame)
 					}
 					else if(insertectInRectangle(positions2,frame.pointables[i]))
 					{
-						console.log("if 2");
+						//console.log("if 2");
 						isTouchingPlane2=true;
 						isTouchingPlane1=false;
 						fingerTouchingRectangle = i;
@@ -219,17 +219,17 @@ Leap.loop(controllerOptions, function(frame)
 					}
 					else
 					{
-						console.log("if 3");
+						//console.log("if 3");
 						isTouchingPlane2=false;
 						isTouchingPlane1=false;
 					}
 				}
 				
-				console.log("x = "+frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[0]+", y = "+frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[1]+", z= "+frame.pointables[fingerTouchingRectangle].tipPosition[2]);
+				// console.log("x = "+frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[0]+", y = "+frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[1]+", z= "+frame.pointables[fingerTouchingRectangle].tipPosition[2]);
 
 				if(plane1 && isTouchingPlane1)
 				{
-					console.log("Finger is touching plane 1 at: ");
+					// console.log("Finger is touching plane 1 at: ");
 					relativeTouchPoint = {
 						x: (frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[0] - positions1.topLeft.x) / (positions1.topRight.x - positions1.topLeft.x),
 						y: 1 - ( (frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[1] - positions1.bottomLeft.y) / (positions1.topLeft.y - positions1.bottomLeft.y))
@@ -259,7 +259,7 @@ Leap.loop(controllerOptions, function(frame)
                     
 				if(plane2 && isTouchingPlane2)
                 {
-					console.log("Finger is touching plane 2 at: ");
+					//console.log("Finger is touching plane 2 at: ");
 					relativeTouchPoint = {
 							x: (frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[0] - positions2.topLeft.x) / (positions2.topRight.x - positions2.topLeft.x),
 							y: 1 - ( (frame.pointables[fingerTouchingRectangle].stabilizedTipPosition[1] - positions2.bottomLeft.y) / (positions2.topLeft.y - positions2.bottomLeft.y))

@@ -1,5 +1,5 @@
 <?php
-if($_POST['erase'])
+if(isset($_POST["erase"]))
 	create_database (true, true);
 
 
