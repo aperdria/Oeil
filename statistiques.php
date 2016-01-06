@@ -13,10 +13,22 @@
 	<?php 
 		include_once("db/functions_db.php");
 		$bdd = connexion();
-		$avg_delay_by_buttons_size = get_avg_delay_by_buttons_size($bdd);
+		
 		$avg_score_by_buttons_size = get_avg_score_by_buttons_size($bdd);
-		$avg_delay_by_post_it_size = get_avg_delay_by_post_it_size($bdd);
+		$stddev_score_by_buttons_size = get_avg_score_by_buttons_size($bdd);
+		
 		$avg_score_by_post_it_size = get_avg_score_by_post_it_size($bdd);
+		$stddev_score_by_post_it_size = get_avg_score_by_post_it_size($bdd);
+		
+		$avg_delay_by_buttons_size = get_avg_delay_by_buttons_size($bdd);
+		$min_max_delay_by_buttons_size = get_min_max_delay_by_buttons_size($bdd);
+		$stddev_delay_by_buttons_size = get_avg_delay_by_buttons_size($bdd);
+		
+		$avg_delay_by_post_it_size = get_avg_delay_by_post_it_size($bdd);
+		$min_max_delay_by_post_it_size = get_min_max_delay_by_post_it_size($bdd);
+		$stddev_delay_by_post_it_size = get_avg_delay_by_post_it_size($bdd);
+		
+		
 		$all_data = get_all_data($bdd);
 	?>
     
@@ -32,25 +44,37 @@
                 <a id="export" onclick="exportData()" class="btn btn-default page-scroll" href="#">Exporter</a>
                 <a class="btn btn-default page-scroll" href="statistiques.php?erase=true">Réinitialiser la base</a>
                 </div>
-				<div class="col-lg-6 col-md-6">
-					<h4>Moyenne des délais de réponses par taille de boutons</h4>
-                    <div id="avg_delay_by_buttons_size" style="height: 250px;"></div>
-                </div>
-				<div class="col-lg-6 col-md-6">
-					<h4>Moyenne des délais de réponses par taille de post-it</h4>
-                    <div id="avg_delay_by_post_it_size" style="height: 250px;"></div>
-                </div></div>
+            </div>
+            
+            <div class="row" style="padding-top:50px;">
+	            <div class="col-lg-12">
+						<h4>Moyenne des scores par taille de boutons et de post-it</h4>
+	                    <div id="avg_score" style="height: 250px;"></div>
+	            </div>
+            </div>
+            <div class="row" style="padding-top:50px;">
+	            <div class="col-lg-12">
+						<h4>Ecart type des scores par taille de boutons et de post-it</h4>
+	                    <div id="stddev_score" style="height: 250px;"></div>
+	            </div>
             </div>
             <div class="row">
-            <div class="col-lg-12">
-				<div class="col-lg-6 col-md-6">
-					<h4>Moyenne des scores par taille de boutons</h4>
-                    <div id="avg_score_by_buttons_size" style="height: 250px;"></div>
-                </div>
-				<div class="col-lg-6 col-md-6">
-					<h4>Moyenne des scores par taille de post-it</h4>
-                    <div id="avg_score_by_post_it_size" style="height: 250px;"></div>
-                </div></div>
+	            <div class="col-lg-12" style="padding-top:50px;">
+						<h4>Moyenne des délais de réponses par taille de boutons et de post-it</h4>
+	                    <div id="avg_delay" style="height: 250px;"></div>
+	            </div>
+            </div>
+            <div class="row">
+	            <div class="col-lg-12" style="padding-top:50px;">
+						<h4>Ecart type des délais de réponses par taille de boutons et de post-it</h4>
+	                    <div id="stddev_delay" style="height: 250px;"></div>
+	            </div>
+            </div>
+            <div class="row">
+	            <div class="col-lg-12" style="padding-top:50px;">
+						<h4>Min et max des délais de réponses par taille de boutons et de post-it</h4>
+	                    <div id="min_max_delay" style="height: 250px;"></div>
+	            </div>
             </div>
         </div>
     </section>
@@ -130,78 +154,141 @@
 
 	<script type="text/javascript">
 		Morris.Bar({
-		  element: 'avg_delay_by_buttons_size',
+		  element: 'avg_delay',
 		  data: [
 				<?php 
 					foreach ($avg_delay_by_buttons_size as $row) {
 						$avg_delay = $row[0];
 						$size = $row[1];
-						echo '{ y: "'.$size.'", a: '.$avg_delay.'},';
+						echo '{ y: "Bouton '.$size.'", a: '.$avg_delay.'},';
 					}
-				?>
-		  ],
-		  xkey: 'y',
-		  ykeys: ['a'],
-		  labels: ['Délai moyen']
-		});
-		
-		Morris.Bar({
-		  element: 'avg_delay_by_post_it_size',
-		  data: [
-				<?php 
 					foreach ($avg_delay_by_post_it_size as $row) {
 						$avg_delay = $row[0];
 						$height = $row[1];
 						$width = $row[2];
-						echo '{ y: "'.$height.'x'.$width.'", a: '.$avg_delay.'},';
+						echo '{ y: "Post-it '.$height.'x'.$width.'", a: '.$avg_delay.'},';
 					}
 				?>
 		  ],
 		  xkey: 'y',
 		  ykeys: ['a'],
 		  labels: ['Délai moyen'],
-		  gridTextColor: '#47B3BC',
-		  barColors: ['#47B3BC']
+		  barColors: function (row, series, type) {
+			console.log("--> "+row.label, series, type);
+			if(row.label.substring(0, 6) == "Bouton") return "#335DA6";
+				else return "#47B3BC";
+			}
 		});
-		
-				Morris.Bar({
-		  element: 'avg_score_by_buttons_size',
+		Morris.Bar({
+		  element: 'stddev_delay',
+		  data: [
+				<?php 
+					foreach ($stddev_delay_by_buttons_size as $row) {
+						$stddev_delay = $row[0];
+						$size = $row[1];
+						echo '{ y: "Bouton '.$size.'", a: '.$stddev_delay.'},';
+					}
+					foreach ($stddev_delay_by_post_it_size as $row) {
+						$stddev_delay = $row[0];
+						$height = $row[1];
+						$width = $row[2];
+						echo '{ y: "Post-it '.$height.'x'.$width.'", a: '.$stddev_delay.'},';
+					}
+				?>
+		  ],
+		  xkey: 'y',
+		  ykeys: ['a'],
+		  labels: ['Délai moyen'],
+		  barColors: function (row, series, type) {
+			console.log("--> "+row.label, series, type);
+			if(row.label.substring(0, 6) == "Bouton") return "#335DA6";
+				else return "#47B3BC";
+			}
+		});
+		Morris.Bar({
+		  element: 'min_max_delay',
+		  data: [
+				<?php 
+					foreach ($min_max_delay_by_buttons_size as $row) {
+						$min_delay = $row[0];
+						$max_delay = $row[1];
+						$size = $row[2];
+						echo '{ y: "Bouton '.$size.'", a: '.$min_delay.', b: '.$max_delay.'},';
+					}
+					foreach ($min_max_delay_by_post_it_size as $row) {
+						$min_delay = $row[0];
+						$max_delay = $row[1];
+						$height = $row[2];
+						$width = $row[3];
+						echo '{ y: "Post-it '.$height.'x'.$width.'", a: '.$min_delay.', b: '.$max_delay.'},';
+					}
+				?>
+		  ],
+		  xkey: 'y',
+		  ykeys: ['a','b'],
+		  labels: ['Délai moyen'],
+		  barColors: function (row, series, type) {
+			console.log("--> "+row.label, series, type);
+			if(row.label.substring(0, 6) == "Bouton") return "#335DA6";
+				else return "#47B3BC";
+			}
+		});
+
+		Morris.Bar({
+		  element: 'avg_score',
 		  data: [
 				<?php 
 					foreach ($avg_score_by_buttons_size as $row) {
-						$avg_delay = $row[0];
+						$avg_score = $row[0];
 						$size = $row[1];
-						echo '{ y: "'.$size.'", a: '.$avg_delay.'},';
+						echo '{ y: "Bouton '.$size.'", a: '.$avg_score.'},';
 					}
-				?>
-		  ],
-		  xkey: 'y',
-		  ykeys: ['a'],
-		  labels: ['Score moyen'],
-		  gridTextColor: '#A63B36',
-		  barColors: ['#A63B36']
-		});
-		
-		Morris.Bar({
-		  element: 'avg_score_by_post_it_size',
-		  data: [
-				<?php 
 					foreach ($avg_score_by_post_it_size as $row) {
-						$avg_delay = $row[0];
+						$avg_score = $row[0];
 						$height = $row[1];
 						$width = $row[2];
-						echo '{ y: "'.$height.'x'.$width.'", a: '.$avg_delay.'},';
+						echo '{ y: "Post-it '.$height.'x'.$width.'", a: '.$avg_score.'},';
 					}
 				?>
 		  ],
 		  xkey: 'y',
 		  ykeys: ['a'],
 		  labels: ['Score moyen'],
-		  gridTextColor: '#BC5C4A',
-		  barColors: ['#BC5C4A']
+		  barColors: function (row, series, type) {
+			console.log("--> "+row.label, series, type);
+			if(row.label.substring(0, 6) == "Bouton") return "#A63B36";
+				else return "#BE6B5D";
+			}
+		});
+		Morris.Bar({
+		  element: 'stddev_score',
+		  data: [
+				<?php 
+					foreach ($stddev_score_by_buttons_size as $row) {
+						$stddev_score = $row[0];
+						$size = $row[1];
+						echo '{ y: "Bouton '.$size.'", a: '.$stddev_score.'},';
+					}
+					foreach ($stddev_score_by_post_it_size as $row) {
+						$stddev_score = $row[0];
+						$height = $row[1];
+						$width = $row[2];
+						echo '{ y: "Post-it '.$height.'x'.$width.'", a: '.$stddev_score.'},';
+					}
+				?>
+		  ],
+		  xkey: 'y',
+		  ykeys: ['a'],
+		  labels: ['Score moyen'],
+		  barColors: function (row, series, type) {
+			console.log("--> "+row.label, series, type);
+			if(row.label.substring(0, 6) == "Bouton") return "#A63B36";
+				else return "#BE6B5D";
+			}
 		});
 	
-		
+	
+		/*
 		new Morris.Line({
 		  // ID of the element in which to draw the chart.
 		  element: 'chart2',
@@ -221,7 +308,7 @@
 		  // Labels for the ykeys -- will be displayed when you hover over the
 		  // chart.
 		  labels: ['Value']
-		});
+		});*/
 	</script>
 
 </body>

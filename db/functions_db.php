@@ -173,10 +173,49 @@ function get_avg_delay_by_buttons_size ($bdd) {
 	$req->execute();
 	return($req->fetchAll());
 }
+function get_min_max_delay_by_buttons_size ($bdd) {
+	$req = $bdd->prepare("
+		SELECT mini, maxi, size
+		FROM(
+		SELECT  min(delay_answer) as mini, max(delay_answer) as maxi, g.id_game, cb.size
+		FROM iteration it, game g, calibration_buttons cb
+		WHERE g.id_game = it.id_game and it.mode = 0 and cb.id=g.calibration_buttons
+		GROUP BY  g.id_game)
+		GROUP BY size
+		ORDER BY size DESC");
+	$req->execute();
+	return($req->fetchAll());
+}
+function get_stddev_delay_by_buttons_size ($bdd) {
+	$req = $bdd->prepare("
+		SELECT stddev(delay) as delay, size
+		FROM(
+		SELECT  avg(delay_answer) as delay, g.id_game, cb.size
+		FROM iteration it, game g, calibration_buttons cb
+		WHERE g.id_game = it.id_game and it.mode = 0 and cb.id=g.calibration_buttons
+		GROUP BY  g.id_game)
+		GROUP BY size
+		ORDER BY size DESC");
+	$req->execute();
+	return($req->fetchAll());
+}
 
 function get_avg_score_by_buttons_size ($bdd) {
 	$req = $bdd->prepare("
 		SELECT AVG(score) as score, size
+		FROM(
+		SELECT  sum(it.score) as score, g.id_game, cb.size
+		FROM iteration it, game g, calibration_buttons cb
+		WHERE g.id_game = it.id_game and it.mode = 0 and cb.id=g.calibration_buttons
+		GROUP BY  g.id_game)
+		GROUP BY size
+		ORDER BY size DESC");
+	$req->execute();
+	return($req->fetchAll());
+}
+function get_stddev_score_by_buttons_size ($bdd) {
+	$req = $bdd->prepare("
+		SELECT stddev(score) as score, size
 		FROM(
 		SELECT  sum(it.score) as score, g.id_game, cb.size
 		FROM iteration it, game g, calibration_buttons cb
@@ -201,9 +240,46 @@ function get_avg_delay_by_post_it_size ($bdd) {
 	return($req->fetchAll());
 }
 
+function get_min_max_delay_by_post_it_size ($bdd) {
+	$req = $bdd->prepare("
+		SELECT min, max, width, height
+		FROM(
+		SELECT  MIN(delay_answer) as min, MAX(delay_answer) as max, g.id_game, cp.height_post_it as height, cp.width_post_it as width
+		FROM iteration it, game g, calibration_post_it cp
+		WHERE g.id_game = it.id_game and it.mode = 1 and cp.id=g.calibration_post_it
+		GROUP BY  g.id_game)
+		GROUP BY width, height");
+	$req->execute();
+	return($req->fetchAll());
+}
+function get_stddev_delay_by_post_it_size ($bdd) {
+	$req = $bdd->prepare("
+		SELECT stddev(delay) as delay, width, height
+		FROM(
+		SELECT  avg(delay_answer) as delay, g.id_game, cp.height_post_it as height, cp.width_post_it as width
+		FROM iteration it, game g, calibration_post_it cp
+		WHERE g.id_game = it.id_game and it.mode = 1 and cp.id=g.calibration_post_it
+		GROUP BY  g.id_game)
+		GROUP BY width, height");
+	$req->execute();
+	return($req->fetchAll());
+}
+
 function get_avg_score_by_post_it_size ($bdd) {
 	$req = $bdd->prepare("
 		SELECT AVG(score) as score, width, height
+		FROM(
+		SELECT  sum(score) as score, g.id_game, cp.height_post_it as height, cp.width_post_it as width
+		FROM iteration it, game g, calibration_post_it cp
+		WHERE g.id_game = it.id_game and it.mode = 1 and cp.id=g.calibration_post_it
+		GROUP BY  g.id_game)
+		GROUP BY width, height");
+	$req->execute();
+	return($req->fetchAll());
+}
+function get_stddev_score_by_post_it_size ($bdd) {
+	$req = $bdd->prepare("
+		SELECT stddev(score) as score, width, height
 		FROM(
 		SELECT  sum(score) as score, g.id_game, cp.height_post_it as height, cp.width_post_it as width
 		FROM iteration it, game g, calibration_post_it cp
