@@ -43,6 +43,7 @@ var intersectionPoint;
 var relativeTouchPoint;
 var relativeTouchPoint2;
 
+var globalFrame;
 var plane1;
 var plane2;
 var fingerLineSegment;
@@ -174,6 +175,9 @@ Leap.loop(controllerOptions, function(frame)
         return; // Skip this update
 
 	//console.log("Frame ID debut: " + frame.id);
+
+	 //sauvegarde de l'objet frame dans globalFrame
+    globalFrame = frame;
 
     //Variable pour gerer l'affichage des informations des mains
     var handString = "<p>";
