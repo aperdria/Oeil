@@ -14,6 +14,10 @@ The aim of this project is to experiment a new way to interact with user interfa
 ### Export statistics to csv file
 * You can export data from the statistics page
 
+### Database
+Statistics are stored in a SQLite database.
+![UML](UML.png)
+
 ## TODO
 * Delete Oui/Non buttons on exercice 2
 * Implements new statistics tools, such as Standard deviation etc.
